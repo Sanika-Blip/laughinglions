@@ -9,1038 +9,1014 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #1a1a1a;
-      --bg2: #141414;
-      --cream: #e8e4dc;
-      --white: #f5f3ef;
-      --accent: #ff3d00;
-      --dim: rgba(232,228,220,0.45);
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
-      --font-script: 'Caveat', cursive;
+      --bg: #0f0f0f; --bg2: #141414; --bg3: #1a1a1a; --cream: #e8e4dc; --white: #f5f3ef;
+      --accent: #ff3d00; --accent2: #ff6b35; --gold: #d4a847;
+      --dim: rgba(232,228,220,0.45); --dim2: rgba(232,228,220,0.25);
+      --font-display: 'Bebas Neue', sans-serif; --font-body: 'DM Sans', sans-serif; --font-script: 'Caveat', cursive;
     }
-
     html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
-
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* ── CUSTOM CURSOR ── */
-    #cursor {
-      position: fixed; top: 0; left: 0; z-index: 9999;
-      pointer-events: none;
-      mix-blend-mode: difference;
-    }
-    #cursor .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--white);
-      position: absolute; transform: translate(-50%,-50%);
-      transition: width .2s, height .2s;
-    }
-    #cursor .ring {
-      width: 36px; height: 36px; border-radius: 50%;
-      border: 1.5px solid var(--white);
-      position: absolute; transform: translate(-50%,-50%);
-      transition: all .12s ease-out;
-    }
-    body:has(a:hover) #cursor .ring,
-    body:has(button:hover) #cursor .ring { width: 56px; height: 56px; }
-
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 9998;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity: 0.025;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 22px 48px;
-      display: flex; justify-content: space-between; align-items: center;
-      mix-blend-mode: normal;
-      transition: background .4s;
-    }
-    nav.scrolled { background: rgba(20,20,20,0.85); backdrop-filter: blur(12px); }
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 1.3rem; letter-spacing: .12em; color: var(--cream);
-    }
-    .nav-links { display: flex; gap: 32px; }
-    .nav-links a {
-      font-size: 0.75rem; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--dim); text-decoration: none;
-      transition: color .25s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -3px; left: 0; right: 100%;
-      height: 1px; background: var(--accent);
-      transition: right .3s ease;
-    }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-body); overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; z-index: 9998; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: 0.03; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; padding: 22px 56px; display: flex; justify-content: space-between; align-items: center; transition: background .4s; }
+    nav.scrolled { background: rgba(15,15,15,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(232,228,220,0.06); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: .15em; color: var(--cream); }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { font-size: 0.72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); text-decoration: none; transition: color .25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; right: 100%; height: 1px; background: var(--accent); transition: right .3s ease; }
     .nav-links a:hover { color: var(--white); }
     .nav-links a:hover::after { right: 0; }
-
-    /* ── SECTIONS ── */
-    section {
-      min-height: 100vh;
-      scroll-snap-align: start;
-      position: relative;
-      overflow: hidden;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 120px 48px 60px;
-    }
-
-    /* ── SECTION LABEL ── */
-    .sec-label {
-      font-size: 0.68rem; letter-spacing: .22em; text-transform: uppercase;
-      color: var(--dim); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .sec-label::before {
-      content: ''; display: block; width: 28px; height: 1px; background: var(--dim);
-    }
-
-    /* ── REVEAL ANIMATION ── */
-    .reveal {
-      opacity: 0; transform: translateY(48px);
-      transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
-    }
+    section { min-height: 100vh; scroll-snap-align: start; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 120px 56px 60px; }
+    .sec-label { font-size: 0.65rem; letter-spacing: .24em; text-transform: uppercase; color: var(--dim); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+    .sec-label::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+    .reveal { opacity: 0; transform: translateY(52px); transition: opacity .95s cubic-bezier(.22,1,.36,1), transform .95s cubic-bezier(.22,1,.36,1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ═══════════════════════════
-       HERO
-    ═══════════════════════════ */
-    #hero {
-      justify-content: flex-end;
-      padding-bottom: 80px;
-      background: var(--bg2);
-    }
-    .hero-bg-text {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -52%);
-      font-family: var(--font-display);
-      font-size: clamp(110px, 18vw, 240px);
-      line-height: .88;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(232,228,220,0.06);
-      white-space: nowrap;
-      user-select: none; pointer-events: none;
-      animation: driftBg 18s ease-in-out infinite alternate;
-    }
-    @keyframes driftBg { from { transform: translate(-50%,-52%) scale(1); } to { transform: translate(-50%,-50%) scale(1.04); } }
-
+    .d1 { transition-delay: .1s !important; } .d2 { transition-delay: .22s !important; } .d3 { transition-delay: .34s !important; } .d4 { transition-delay: .46s !important; } .d5 { transition-delay: .58s !important; }
+    #hero { justify-content: flex-end; padding-bottom: 90px; background: var(--bg); }
+    .hero-orb { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(255,61,0,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-55%); pointer-events: none; animation: orbPulse 6s ease-in-out infinite; }
+    @keyframes orbPulse { 0%,100% { transform: translate(-50%,-55%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-55%) scale(1.15); opacity: 1; } }
+    .hero-bg-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-52%); font-family: var(--font-display); font-size: clamp(120px, 19vw, 260px); line-height: .88; color: transparent; -webkit-text-stroke: 1px rgba(232,228,220,0.04); white-space: nowrap; user-select: none; pointer-events: none; animation: driftBg 20s ease-in-out infinite alternate; }
+    @keyframes driftBg { from { transform: translate(-50%,-52%) scale(1); } to { transform: translate(-50%,-50%) scale(1.05); } }
     .hero-content { position: relative; z-index: 2; }
-    .hero-tag {
-      font-family: var(--font-script);
-      font-size: 1.4rem;
-      color: var(--dim);
-      margin-bottom: 16px;
-      display: block;
-    }
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(72px, 13vw, 180px);
-      line-height: .9;
-      color: var(--cream);
-      letter-spacing: .01em;
-    }
+    .hero-tag { font-family: var(--font-script); font-size: 1.5rem; color: var(--dim); margin-bottom: 18px; display: block; letter-spacing: .02em; }
+    .hero-title { font-family: var(--font-display); font-size: clamp(80px, 14vw, 200px); line-height: .88; color: var(--cream); letter-spacing: .01em; }
     .hero-title span { color: var(--accent); }
-    .hero-subtitle {
-      font-size: 0.72rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--dim); margin-top: 28px;
-    }
+    .hero-subtitle { font-size: 0.7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); margin-top: 32px; }
     .hero-subtitle span { color: var(--white); }
-
-    /* animated marquee */
-    .hero-marquee {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      overflow: hidden; border-top: 1px solid rgba(232,228,220,0.08);
-      padding: 14px 0;
-    }
-    .marquee-inner {
-      display: flex; gap: 48px;
-      white-space: nowrap;
-      animation: marquee 22s linear infinite;
-      font-size: 0.68rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--dim);
-    }
+    .hero-pill { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(255,61,0,0.3); padding: 10px 22px; border-radius: 100px; font-size: 0.7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-top: 28px; }
+    .hero-pill::before { content: '●'; font-size: 8px; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    .hero-marquee { position: absolute; bottom: 0; left: 0; right: 0; overflow: hidden; border-top: 1px solid rgba(232,228,220,0.07); padding: 16px 0; }
+    .marquee-inner { display: flex; gap: 52px; white-space: nowrap; animation: marquee 24s linear infinite; font-size: 0.66rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); }
     .marquee-inner span { color: var(--accent); }
+    .marquee-sep { color: rgba(255,61,0,0.4) !important; }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    /* scroll hint */
-    .scroll-hint {
-      position: absolute; right: 48px; bottom: 70px;
-      writing-mode: vertical-rl;
-      font-size: 0.65rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--dim);
-      display: flex; flex-direction: column; align-items: center; gap: 14px;
-      animation: fadeUp 1s 1.4s both;
-    }
-    .scroll-hint::after {
-      content: ''; width: 1px; height: 60px;
-      background: linear-gradient(to bottom, var(--dim), transparent);
-      animation: lineGrow 1.5s 1.8s ease both;
-    }
-    @keyframes lineGrow { from { height: 0; } to { height: 60px; } }
+    .scroll-hint { position: absolute; right: 56px; bottom: 74px; writing-mode: vertical-rl; font-size: 0.62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); display: flex; flex-direction: column; align-items: center; gap: 14px; animation: fadeUp 1s 1.4s both; }
+    .scroll-hint::after { content: ''; width: 1px; height: 64px; background: linear-gradient(to bottom, var(--dim), transparent); animation: lineGrow 1.5s 1.8s ease both; }
+    @keyframes lineGrow { from { height: 0; } to { height: 64px; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ═══════════════════════════
-       WHY SECTION
-    ═══════════════════════════ */
-    #why { background: var(--bg); }
-    .why-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      max-width: 1200px;
-    }
-    .why-title {
-      font-family: var(--font-display);
-      font-size: clamp(56px, 8vw, 110px);
-      line-height: .92;
-      color: var(--cream);
-    }
-    .why-script {
-      font-family: var(--font-script);
-      font-size: 1.25rem;
-      color: var(--accent);
-      margin-bottom: 18px; display: block;
-    }
-    .why-text {
-      font-size: 0.92rem; line-height: 1.85;
-      color: rgba(232,228,220,0.65);
-    }
-    .why-text + .why-text { margin-top: 14px; }
-    .why-img {
-      position: relative; border-radius: 4px; overflow: hidden;
-      aspect-ratio: 4/3;
-    }
-    .why-img img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: grayscale(20%) contrast(1.05);
-      transition: transform .8s ease, filter .8s ease;
-    }
-    .why-img:hover img { transform: scale(1.04); filter: grayscale(0%) contrast(1.1); }
-    .why-img::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,61,0,0.12), transparent 60%);
-    }
-    /* corner accent */
-    .why-img::before {
-      content: ''; position: absolute; top: -1px; left: -1px;
-      width: 60px; height: 60px;
-      border-top: 2px solid var(--accent); border-left: 2px solid var(--accent);
-      z-index: 2;
-    }
-
-    /* ═══════════════════════════
-       WHAT WE DO
-    ═══════════════════════════ */
-    #whatwedo { background: var(--bg2); }
-    .services-title {
-      font-family: var(--font-display);
-      font-size: clamp(52px, 9vw, 120px);
-      line-height: .9;
-      color: var(--cream);
-      margin-bottom: 60px;
-    }
-    .services-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr);
-      gap: 1px; background: rgba(232,228,220,0.08);
-      border: 1px solid rgba(232,228,220,0.08);
-    }
-    .service-card {
-      padding: 36px 28px;
-      background: var(--bg2);
-      position: relative; overflow: hidden;
-      transition: background .35s;
-      cursor: default;
-    }
-    .service-card::before {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 0; background: var(--accent);
-      transition: height .4s cubic-bezier(.22,1,.36,1);
-    }
+    #why { background: var(--bg2); }
+    .why-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center; max-width: 1200px; }
+    .why-title { font-family: var(--font-display); font-size: clamp(60px, 9vw, 120px); line-height: .88; color: var(--cream); }
+    .why-script { font-family: var(--font-script); font-size: 1.3rem; color: var(--accent); margin-bottom: 20px; display: block; }
+    .why-text { font-size: 0.9rem; line-height: 1.9; color: rgba(232,228,220,0.6); }
+    .why-text + .why-text { margin-top: 16px; }
+    .why-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: rgba(232,228,220,0.08); border: 1px solid rgba(232,228,220,0.08); margin-top: 36px; }
+    .why-stat { padding: 24px 20px; background: var(--bg2); text-align: center; }
+    .why-stat-num { font-family: var(--font-display); font-size: 2.8rem; color: var(--accent); line-height: 1; }
+    .why-stat-label { font-size: 0.68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-top: 6px; }
+    #whatwedo { background: var(--bg); }
+    .services-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
+    .services-title { font-family: var(--font-display); font-size: clamp(56px, 9vw, 130px); line-height: .88; color: var(--cream); }
+    .services-tagline { font-size: 0.8rem; line-height: 1.7; color: var(--dim); max-width: 240px; text-align: right; }
+    .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(232,228,220,0.07); border: 1px solid rgba(232,228,220,0.07); }
+    .service-card { padding: 40px 28px; background: var(--bg); position: relative; overflow: hidden; transition: background .35s; cursor: default; }
+    .service-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0; background: var(--accent); transition: height .4s cubic-bezier(.22,1,.36,1); }
     .service-card:hover::before { height: 3px; }
-    .service-card:hover { background: rgba(255,61,0,0.04); }
-    .service-num {
-      font-family: var(--font-display);
-      font-size: 2.8rem; color: rgba(232,228,220,0.07);
-      margin-bottom: 12px; line-height: 1;
-    }
-    .service-name {
-      font-size: 0.82rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--cream); margin-bottom: 10px;
-    }
-    .service-desc {
-      font-size: 0.75rem; line-height: 1.7;
-      color: rgba(232,228,220,0.45);
-    }
-    .services-script {
-      font-family: var(--font-script);
-      font-size: 1.2rem; color: var(--dim);
-      margin-top: 36px; display: block;
-    }
-
-    /* ═══════════════════════════
-       SERVICE DETAIL SECTIONS
-    ═══════════════════════════ */
-    .detail-section {
-      background: var(--bg);
-      position: relative;
-    }
-    .detail-section:nth-child(even) { background: var(--bg2); }
-
-    .detail-bg-img {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      opacity: 0.12;
-      filter: grayscale(1) contrast(1.2);
-      transition: opacity .6s;
-    }
-    .detail-section:hover .detail-bg-img { opacity: 0.18; }
-
+    .service-card:hover { background: rgba(255,61,0,0.035); }
+    .service-num { font-family: var(--font-display); font-size: 3.5rem; color: rgba(232,228,220,0.05); margin-bottom: 14px; line-height: 1; }
+    .service-name { font-size: 0.8rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); margin-bottom: 12px; }
+    .service-desc { font-size: 0.74rem; line-height: 1.75; color: rgba(232,228,220,0.4); }
+    .service-card.wide { grid-column: span 2; background: rgba(255,61,0,0.03); border-right: none; }
+    .service-card.wide .service-name { color: var(--accent); }
+    .services-bottom { display: flex; gap: 1px; background: rgba(232,228,220,0.07); margin-top: 1px; }
+    .service-mini { flex: 1; padding: 24px 28px; background: var(--bg); display: flex; align-items: center; gap: 16px; transition: background .3s; }
+    .service-mini:hover { background: rgba(255,61,0,0.03); }
+    .service-mini-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .service-mini-name { font-size: 0.75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+    .detail-section { background: var(--bg2); position: relative; }
+    .detail-section:nth-child(odd) { background: var(--bg3); }
+    .detail-bg-img { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.1; filter: grayscale(1) contrast(1.3); transition: opacity .6s; }
+    .detail-section:hover .detail-bg-img { opacity: 0.16; }
     .detail-content { position: relative; z-index: 2; max-width: 1200px; width: 100%; }
-    .detail-title {
-      font-family: var(--font-display);
-      font-size: clamp(64px, 10vw, 140px);
-      line-height: .88;
-      color: var(--cream);
-      margin-bottom: 20px;
-    }
-    .detail-tagline {
-      font-size: 0.85rem; line-height: 1.8;
-      color: rgba(232,228,220,0.55);
-      max-width: 440px;
-      margin-bottom: 48px;
-    }
-    .detail-script {
-      font-family: var(--font-script);
-      font-size: 1.35rem; color: var(--accent);
-      display: block; margin-top: 36px;
-    }
-
-    .detail-cards {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 28px;
-    }
-    .detail-card {
-      padding: 28px;
-      border: 1px solid rgba(232,228,220,0.08);
-      border-radius: 3px;
-      position: relative; overflow: hidden;
-      transition: border-color .35s;
-    }
-    .detail-card:hover { border-color: rgba(255,61,0,0.35); }
-    .detail-card-title {
-      font-size: 0.8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--cream); margin-bottom: 10px;
-    }
-    .detail-card-text {
-      font-size: 0.78rem; line-height: 1.8;
-      color: rgba(232,228,220,0.5);
-    }
-    .detail-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 3px; height: 0; background: var(--accent);
-      transition: height .4s cubic-bezier(.22,1,.36,1);
-    }
+    .detail-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+    .detail-title { font-family: var(--font-display); font-size: clamp(72px, 11vw, 150px); line-height: .86; color: var(--cream); margin-bottom: 24px; }
+    .detail-tagline { font-size: 0.85rem; line-height: 1.85; color: rgba(232,228,220,0.5); max-width: 360px; }
+    .detail-script { font-family: var(--font-script); font-size: 1.3rem; color: var(--accent); display: block; margin-top: 32px; }
+    .detail-num-big { font-family: var(--font-display); font-size: 7rem; color: rgba(255,61,0,0.08); line-height: 1; margin-bottom: -20px; }
+    .detail-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .detail-card { padding: 28px; border: 1px solid rgba(232,228,220,0.07); border-radius: 2px; position: relative; overflow: hidden; transition: border-color .35s, transform .4s cubic-bezier(.22,1,.36,1); }
+    .detail-card:hover { border-color: rgba(255,61,0,0.3); transform: translateY(-3px); }
+    .detail-card-title { font-size: 0.76rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--cream); margin-bottom: 10px; }
+    .detail-card-text { font-size: 0.76rem; line-height: 1.8; color: rgba(232,228,220,0.45); }
+    .detail-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0; background: var(--accent); transition: height .4s cubic-bezier(.22,1,.36,1); }
     .detail-card:hover::before { height: 100%; }
-
-    /* ═══════════════════════════
-       DIFFERENTIATORS
-    ═══════════════════════════ */
-    #different { background: var(--bg2); }
-    .diff-title {
-      font-family: var(--font-display);
-      font-size: clamp(52px, 8vw, 110px);
-      line-height: .9; color: var(--cream);
-      margin-bottom: 56px;
-    }
+    #different { background: var(--bg); }
+    .diff-title { font-family: var(--font-display); font-size: clamp(56px, 9vw, 120px); line-height: .88; color: var(--cream); margin-bottom: 60px; }
     .diff-list { list-style: none; }
-    .diff-item {
-      display: flex; align-items: center;
-      padding: 22px 0;
-      border-bottom: 1px solid rgba(232,228,220,0.07);
-      gap: 24px;
-      overflow: hidden;
-      transition: padding .3s;
-    }
-    .diff-item:hover { padding-left: 12px; }
-    .diff-num {
-      font-family: var(--font-display);
-      font-size: 1.1rem; color: var(--accent); min-width: 40px;
-    }
-    .diff-text {
-      font-size: clamp(1rem, 2.2vw, 1.5rem);
-      font-weight: 300; color: var(--cream);
-      letter-spacing: -.01em;
-    }
-    .diff-arrow {
-      margin-left: auto; color: var(--dim);
-      font-size: 1.2rem;
-      transition: transform .3s, color .3s;
-    }
-    .diff-item:hover .diff-arrow { transform: translateX(8px); color: var(--accent); }
-    .diff-script {
-      font-family: var(--font-script);
-      font-size: 1.25rem; color: var(--dim);
-      margin-top: 40px; display: block;
-    }
-
-    /* ═══════════════════════════
-       OUR WORK
-    ═══════════════════════════ */
-    #work { background: var(--bg); }
-    .work-title {
-      font-family: var(--font-display);
-      font-size: clamp(60px, 10vw, 140px);
-      color: var(--cream); line-height: .9;
-      margin-bottom: 12px;
-    }
-    .work-subtitle {
-      font-size: 0.82rem; font-style: italic;
-      color: var(--dim); margin-bottom: 60px;
-      font-weight: 300;
-    }
-    .brands-row {
-      display: flex; gap: 48px; align-items: center; flex-wrap: wrap;
-    }
-    .brand-tile {
-      padding: 32px 44px;
-      border: 1px solid rgba(232,228,220,0.1);
-      border-radius: 4px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 12px;
-      min-width: 200px;
-      transition: border-color .35s, background .35s, transform .4s cubic-bezier(.22,1,.36,1);
-      cursor: default;
-    }
-    .brand-tile:hover {
-      border-color: rgba(255,61,0,0.4);
-      background: rgba(255,61,0,0.04);
-      transform: translateY(-6px);
-    }
-    .brand-name {
-      font-family: var(--font-display);
-      font-size: 1.5rem; color: var(--cream); letter-spacing: .04em;
-    }
-    .brand-tag {
-      font-size: 0.65rem; letter-spacing: .18em; text-transform: uppercase;
-      color: var(--dim);
-    }
-    /* brand logos (text-based) */
-    .brand-logo-mm {
-      font-family: var(--font-display); font-size: 1.8rem;
-      color: var(--cream); line-height: 1; text-align: center;
-    }
-    .brand-logo-mm .chili { color: var(--accent); }
-    .brand-logo-sh {
-      font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .08em;
-      color: var(--cream);
-    }
-
-    /* ═══════════════════════════
-       HOW WE ENGAGE
-    ═══════════════════════════ */
-    #engage { background: var(--bg2); }
-    .engage-title {
-      font-family: var(--font-display);
-      font-size: clamp(52px, 8vw, 110px);
-      color: var(--cream); line-height: .9; margin-bottom: 56px;
-    }
-    .engage-models {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
-    }
-    .engage-card {
-      padding: 40px 32px;
-      border: 1px solid rgba(232,228,220,0.08);
-      position: relative; overflow: hidden;
-      transition: border-color .35s;
-    }
-    .engage-card:hover { border-color: var(--accent); }
-    .engage-card-num {
-      font-family: var(--font-display);
-      font-size: 5rem; color: rgba(232,228,220,0.05);
-      position: absolute; top: 12px; right: 20px;
-    }
-    .engage-card-title {
-      font-family: var(--font-display);
-      font-size: 2.2rem; color: var(--cream); margin-bottom: 14px;
-      line-height: 1;
-    }
-    .engage-card-desc {
-      font-size: 0.78rem; line-height: 1.8;
-      color: rgba(232,228,220,0.5);
-    }
-    .engage-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px; background: var(--accent);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform .4s cubic-bezier(.22,1,.36,1);
-    }
+    .diff-item { display: flex; align-items: center; padding: 24px 0; border-bottom: 1px solid rgba(232,228,220,0.06); gap: 24px; transition: padding .3s; }
+    .diff-item:hover { padding-left: 16px; }
+    .diff-num { font-family: var(--font-display); font-size: 1rem; color: var(--accent); min-width: 42px; }
+    .diff-text { font-size: clamp(1rem, 2.4vw, 1.6rem); font-weight: 300; color: var(--cream); letter-spacing: -.01em; }
+    .diff-arrow { margin-left: auto; color: var(--dim2); font-size: 1.1rem; transition: transform .3s, color .3s; }
+    .diff-item:hover .diff-arrow { transform: translateX(10px); color: var(--accent); }
+    .diff-script { font-family: var(--font-script); font-size: 1.3rem; color: var(--dim); margin-top: 44px; display: block; }
+    #work { background: var(--bg2); }
+    .work-title { font-family: var(--font-display); font-size: clamp(64px, 11vw, 150px); color: var(--cream); line-height: .88; margin-bottom: 10px; }
+    .work-subtitle { font-size: 0.82rem; font-style: italic; color: var(--dim); margin-bottom: 64px; font-weight: 300; }
+    .brands-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(232,228,220,0.07); border: 1px solid rgba(232,228,220,0.07); }
+    .brand-tile { padding: 48px 32px; background: var(--bg2); display: flex; flex-direction: column; align-items: flex-start; gap: 16px; transition: background .35s, transform .4s cubic-bezier(.22,1,.36,1); cursor: default; position: relative; overflow: hidden; }
+    .brand-tile::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.22,1,.36,1); }
+    .brand-tile:hover::after { transform: scaleX(1); }
+    .brand-tile:hover { background: rgba(255,61,0,0.04); }
+    .brand-icon { width: 52px; height: 52px; border: 1px solid rgba(232,228,220,0.15); display: flex; align-items: center; justify-content: center; }
+    .brand-name { font-family: var(--font-display); font-size: 1.6rem; color: var(--cream); letter-spacing: .04em; line-height: 1; }
+    .brand-tag { font-size: 0.63rem; letter-spacing: .18em; text-transform: uppercase; color: var(--dim2); }
+    .brand-service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .bst { font-size: 0.6rem; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(255,61,0,0.25); color: rgba(255,61,0,0.7); }
+    #engage { background: var(--bg3); }
+    .engage-title { font-family: var(--font-display); font-size: clamp(56px, 9vw, 120px); color: var(--cream); line-height: .88; margin-bottom: 60px; }
+    .engage-models { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .engage-card { padding: 44px 36px; border: 1px solid rgba(232,228,220,0.08); position: relative; overflow: hidden; transition: border-color .35s; background: var(--bg2); }
+    .engage-card:hover { border-color: rgba(255,61,0,0.4); background: rgba(255,61,0,0.03); }
+    .engage-card-num { font-family: var(--font-display); font-size: 6rem; color: rgba(232,228,220,0.04); position: absolute; top: 10px; right: 18px; line-height: 1; }
+    .engage-card-title { font-family: var(--font-display); font-size: 2.6rem; color: var(--cream); margin-bottom: 16px; line-height: 1; }
+    .engage-card-desc { font-size: 0.78rem; line-height: 1.85; color: rgba(232,228,220,0.45); }
+    .engage-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.22,1,.36,1); }
     .engage-card:hover::after { transform: scaleX(1); }
-    .engage-script {
-      font-family: var(--font-script);
-      font-size: 1.25rem; color: var(--dim);
-      margin-top: 40px; display: block;
-    }
-
-    /* ═══════════════════════════
-       CTA
-    ═══════════════════════════ */
-    #cta {
-      background: var(--bg);
-      justify-content: center; align-items: center; text-align: center;
-    }
-    .cta-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% 60%, rgba(255,61,0,0.07), transparent 70%);
-    }
-    .cta-content { position: relative; z-index: 2; max-width: 900px; }
-    .cta-title {
-      font-family: var(--font-display);
-      font-size: clamp(56px, 9vw, 130px);
-      line-height: .9; color: var(--cream);
-      margin-bottom: 32px;
-    }
-    .cta-wants {
-      display: flex; flex-direction: column; gap: 8px;
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      font-style: italic; font-weight: 300;
-      color: rgba(232,228,220,0.6);
-      margin-bottom: 40px;
-    }
-    .cta-close {
-      font-family: var(--font-display);
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      color: var(--accent);
-    }
-
-    /* ═══════════════════════════
-       CONTACT
-    ═══════════════════════════ */
-    #contact {
-      background: var(--bg2);
-      justify-content: center; align-items: center; text-align: center;
-    }
-    .contact-big {
-      font-family: var(--font-display);
-      font-size: clamp(60px, 11vw, 160px);
-      color: var(--cream); line-height: .88;
-      margin-bottom: 60px;
-    }
+    .engage-script { font-family: var(--font-script); font-size: 1.3rem; color: var(--dim); margin-top: 44px; display: block; }
+    #cta { background: var(--bg); justify-content: center; align-items: center; text-align: center; }
+    .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 65% 55% at 50% 60%, rgba(255,61,0,0.09), transparent 70%); pointer-events: none; }
+    .cta-ring { position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(255,61,0,0.06); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: ringExpand 6s ease-in-out infinite; }
+    .cta-ring:nth-child(2) { width: 700px; height: 700px; animation-delay: 2s; }
+    .cta-ring:nth-child(3) { width: 900px; height: 900px; animation-delay: 4s; }
+    @keyframes ringExpand { 0%,100% { opacity: 0.4; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 0.8; transform: translate(-50%,-50%) scale(1.04); } }
+    .cta-content { position: relative; z-index: 2; max-width: 920px; }
+    .cta-title { font-family: var(--font-display); font-size: clamp(60px, 10vw, 140px); line-height: .88; color: var(--cream); margin-bottom: 36px; }
+    .cta-wants { display: flex; flex-direction: column; gap: 10px; font-size: clamp(1rem, 2vw, 1.45rem); font-style: italic; font-weight: 300; color: rgba(232,228,220,0.55); margin-bottom: 48px; }
+    .cta-wants span { transition: color .3s; }
+    .cta-wants span:hover { color: var(--white); }
+    .cta-close { font-family: var(--font-display); font-size: clamp(1.5rem, 3.2vw, 2.6rem); color: var(--accent); }
+    #contact { background: var(--bg2); justify-content: center; align-items: center; text-align: center; }
+    .contact-big { font-family: var(--font-display); font-size: clamp(64px, 12vw, 170px); color: var(--cream); line-height: .86; margin-bottom: 64px; }
     .contact-big span { color: var(--accent); }
-    .contact-row {
-      display: flex; gap: 64px; justify-content: center;
-      flex-wrap: wrap;
-    }
+    .contact-row { display: flex; gap: 72px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
     .contact-block { text-align: left; }
-    .contact-label {
-      font-size: 0.65rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--dim); margin-bottom: 6px; font-style: italic;
-    }
-    .contact-val {
-      font-size: 0.95rem; color: var(--white);
-      text-decoration: none;
-      transition: color .25s;
-    }
+    .contact-label { font-size: 0.62rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+    .contact-val { font-size: 0.95rem; color: var(--white); text-decoration: none; transition: color .25s; display: block; }
     .contact-val:hover { color: var(--accent); }
-
-    /* ═══════════════════════════
-       SPLIT LAYOUT HELPER
-    ═══════════════════════════ */
-    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1200px; width: 100%; }
-    .split.right-lead { grid-template-columns: 1fr 1.2fr; }
-
-    /* ═══════════════════════════
-       PAGE INDICATOR DOTS
-    ═══════════════════════════ */
-    #page-dots {
-      position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 10px; z-index: 90;
-    }
-    .page-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(232,228,220,0.25);
-      transition: background .3s, transform .3s;
-      cursor: pointer;
-    }
-    .page-dot.active { background: var(--accent); transform: scale(1.5); }
-
-    /* ═══════════════════════════
-       STAGGER DELAYS
-    ═══════════════════════════ */
-    .d1 { transition-delay: .1s !important; }
-    .d2 { transition-delay: .22s !important; }
-    .d3 { transition-delay: .34s !important; }
-    .d4 { transition-delay: .46s !important; }
-    .d5 { transition-delay: .58s !important; }
-
-    /* ═══════════════════════════
-       RESPONSIVE
-    ═══════════════════════════ */
+    .contact-footer { font-size: 0.68rem; letter-spacing: .18em; text-transform: uppercase; color: var(--dim2); margin-top: 48px; border-top: 1px solid rgba(232,228,220,0.06); padding-top: 32px; width: 100%; }
+    #page-dots { position: fixed; right: 26px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 90; }
+    .page-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(232,228,220,0.2); transition: background .3s, transform .3s, height .3s; cursor: pointer; }
+    .page-dot.active { background: var(--accent); height: 20px; border-radius: 3px; }
     @media (max-width: 900px) {
-      section { padding: 100px 28px 48px; }
-      nav { padding: 18px 28px; }
-      .nav-links { display: none; }
-      .why-grid, .split, .detail-cards, .engage-models,
-      .services-grid { grid-template-columns: 1fr; }
-      .services-grid { grid-template-columns: 1fr 1fr; }
-      .contact-row { flex-direction: column; gap: 28px; align-items: center; }
-      #page-dots { display: none; }
-      .scroll-hint { display: none; }
+      section { padding: 100px 24px 48px; } nav { padding: 18px 24px; } .nav-links { display: none; }
+      .why-grid, .detail-layout, .engage-models, .brands-grid, .services-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr 1fr; } .services-bottom { flex-direction: column; }
+      .service-card.wide { grid-column: span 1; } .contact-row { flex-direction: column; gap: 28px; align-items: center; }
+      .detail-cards { grid-template-columns: 1fr; } #page-dots, .scroll-hint { display: none; }
+    }
+    #cs-overlay { position: fixed; inset: 0; z-index: 1000; background: var(--bg); transform: translateX(100%); transition: transform .65s cubic-bezier(.22,1,.36,1); overflow-y: auto; overflow-x: hidden; }
+    #cs-overlay.open { transform: translateX(0); }
+    .cs-header { position: sticky; top: 0; z-index: 10; padding: 24px 56px; display: flex; justify-content: space-between; align-items: center; background: rgba(15,15,15,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(232,228,220,0.06); }
+    .cs-header-logo { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .14em; color: var(--cream); }
+    .cs-header-logo span { color: var(--accent); }
+    .cs-close { width: 44px; height: 44px; border: 1px solid rgba(232,228,220,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: none; color: var(--cream); font-size: 1.2rem; transition: border-color .3s, background .3s; }
+    .cs-close:hover { border-color: var(--accent); background: rgba(255,61,0,0.08); color: var(--accent); }
+    .cs-hero { padding: 100px 56px 72px; position: relative; overflow: hidden; }
+    .cs-hero-label { font-size: 0.65rem; letter-spacing: .24em; text-transform: uppercase; color: var(--dim); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+    .cs-hero-label::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+    .cs-hero-title { font-family: var(--font-display); font-size: clamp(72px, 11vw, 150px); line-height: .86; color: var(--cream); }
+    .cs-hero-title span { color: var(--accent); }
+    .cs-hero-sub { font-size: 0.85rem; line-height: 1.8; color: rgba(232,228,220,0.5); max-width: 520px; margin-top: 24px; }
+    .cs-bg-text { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%); font-family: var(--font-display); font-size: clamp(100px,16vw,200px); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(232,228,220,0.03); white-space: nowrap; pointer-events: none; }
+    .cs-full { display: none; padding: 80px 56px 100px; max-width: 1100px; }
+    .cs-full.active { display: block; }
+    .cs-back { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); cursor: pointer; margin-bottom: 60px; background: none; border: none; transition: color .3s, gap .3s; padding: 0; }
+    .cs-back:hover { color: var(--accent); gap: 14px; }
+    .cs-full-eyebrow { font-size: 0.65rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .cs-full-title { font-family: var(--font-display); font-size: clamp(56px,8vw,110px); line-height: .88; color: var(--cream); margin-bottom: 16px; }
+    .cs-full-subtitle { font-family: var(--font-script); font-size: 1.4rem; color: var(--dim); margin-bottom: 48px; display: block; }
+    .cs-divider { width: 100%; height: 1px; background: rgba(232,228,220,0.07); margin: 48px 0; }
+    .cs-section-label { font-size: 0.65rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .cs-body-text { font-size: 0.9rem; line-height: 1.95; color: rgba(232,228,220,0.6); max-width: 720px; }
+    .cs-body-text + .cs-body-text { margin-top: 16px; }
+    .cs-challenge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .cs-challenge-item { padding: 22px 24px; border: 1px solid rgba(232,228,220,0.07); font-size: 0.8rem; line-height: 1.7; color: rgba(232,228,220,0.5); position: relative; overflow: hidden; }
+    .cs-challenge-item::before { content: '—'; color: var(--accent); margin-right: 10px; }
+    .cs-phase { margin-top: 36px; }
+    .cs-phase-title { font-family: var(--font-display); font-size: 1.8rem; color: var(--cream); margin-bottom: 14px; }
+    .cs-phase-tag { font-size: 0.65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; display: block; }
+    .cs-bullets { list-style: none; margin-top: 16px; }
+    .cs-bullets li { font-size: 0.82rem; line-height: 1.8; color: rgba(232,228,220,0.55); padding: 8px 0; border-bottom: 1px solid rgba(232,228,220,0.05); display: flex; gap: 12px; }
+    .cs-bullets li::before { content: '✦'; color: var(--accent); font-size: 0.5rem; flex-shrink: 0; margin-top: 6px; }
+    .cs-results-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(232,228,220,0.07); border: 1px solid rgba(232,228,220,0.07); margin-top: 28px; }
+    .cs-result-item { padding: 28px 24px; background: var(--bg2); }
+    .cs-result-icon { font-size: 1.2rem; margin-bottom: 10px; }
+    .cs-result-text { font-size: 0.8rem; line-height: 1.7; color: rgba(232,228,220,0.55); }
+    .cs-why-box { margin-top: 48px; padding: 40px; border: 1px solid rgba(255,61,0,0.15); background: rgba(255,61,0,0.03); position: relative; }
+    .cs-why-box::before { content: '"'; font-family: var(--font-display); font-size: 8rem; color: rgba(255,61,0,0.06); position: absolute; top: -20px; left: 24px; line-height: 1; }
+    .cs-why-text { font-size: 0.95rem; line-height: 1.9; color: rgba(232,228,220,0.65); font-style: italic; }
+    .cs-why-closer { font-family: var(--font-display); font-size: 1.5rem; color: var(--accent); margin-top: 20px; display: block; }
+    .cs-nav-row { display: flex; justify-content: space-between; margin-top: 80px; border-top: 1px solid rgba(232,228,220,0.07); padding-top: 40px; }
+    .cs-nav-btn { display: flex; flex-direction: column; gap: 6px; cursor: pointer; background: none; border: none; transition: opacity .3s; padding: 0; text-align: left; }
+    .cs-nav-btn.right { text-align: right; }
+    .cs-nav-btn:hover { opacity: 0.75; }
+    .cs-nav-dir { font-size: 0.62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+    .cs-nav-name { font-family: var(--font-display); font-size: 1.4rem; color: var(--cream); }
+    @media (max-width: 900px) {
+      .cs-header { padding: 18px 24px; } .cs-hero, .cs-full { padding: 80px 24px 60px; }
+      .cs-challenge-grid, .cs-results-grid { grid-template-columns: 1fr; }
+    }
+
+  /* ─── LANDING PAGE ─── */
+  #landing-page {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 1.2s cubic-bezier(.77,0,.18,1), visibility 1.2s;
+  }
+  #landing-page.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* canvas fills the screen */
+  #landing-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* dark overlay on video */
+  #landing-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.35) 50%,
+      rgba(0,0,0,0.65) 100%
+    );
+  }
+
+  /* noise grain on top */
+  #landing-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.045;
+    pointer-events: none;
+  }
+
+  /* brand name top-left */
+  #landing-logo {
+    position: absolute;
+    top: 36px;
+    left: 52px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: .2em;
+    color: rgba(232,228,220,0.9);
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-12px);
+    animation: landFadeUp .9s 0.4s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  #landing-logo span { color: #ff3d00; }
+
+  /* tagline above button */
+  #landing-tagline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - 80px));
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: rgba(232,228,220,0.5);
+    letter-spacing: .04em;
+    white-space: nowrap;
+    z-index: 2;
+    opacity: 0;
+    animation: landFadeUp .9s 0.8s cubic-bezier(.22,1,.36,1) forwards;
+  }
+
+  /* centre content wrapper */
+  #landing-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* big wordmark */
+  #landing-wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 180px);
+    line-height: .88;
+    letter-spacing: .02em;
+    color: rgba(232,228,220,0.95);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: landFadeUp 1.1s 0.2s cubic-bezier(.22,1,.36,1) forwards;
+    margin-bottom: 48px;
+  }
+  #landing-wordmark span { color: #ff3d00; }
+
+  /* the button */
+  #explore-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 48px;
+    border: 1px solid rgba(255,61,0,0.55);
+    border-radius: 100px;
+    background: transparent;
+    color: rgba(232,228,220,0.92);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIE1haW4gcGFkIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjQ0IiByeD0iMTYiIHJ5PSIxNCIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDwhLS0gQm90dG9tLWxlZnQgbG9iZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjAiIGN5PSI1NCIgcng9IjciIHJ5PSI1LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCA1NCkiLz4KICA8IS0tIEJvdHRvbS1yaWdodCBsb2JlIC0tPgogIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjU0IiByeD0iNyIgcnk9IjUuNSIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoMjAgNDQgNTQpIi8+CiAgPCEtLSBUb3AtbGVmdCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjE0IiBjeT0iMzQiIHJ4PSI2IiByeT0iNyIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDE0IDM0KSIvPgogIDwhLS0gVG9wLWNlbnRlci1sZWZ0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIyOCIgcng9IjYiIHJ5PSI3LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC01IDI0IDI4KSIvPgogIDwhLS0gVG9wLWNlbnRlci1yaWdodCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjM2IiBjeT0iMjciIHJ4PSI2IiByeT0iNy41IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSg1IDM2IDI3KSIvPgogIDwhLS0gVG9wLXJpZ2h0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzMiIgcng9IjYiIHJ5PSI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSgxMiA0OCAzMikiLz4KICA8IS0tIENsYXdzIC0tPgogIDxwYXRoIGQ9Ik0xMSAyOCBROCAyMCAxMCAxNCBRMTMgMjAgMTQgMjciIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8cGF0aCBkPSJNMjEgMjIgUTIwIDEzIDIzIDggUTI1IDE1IDI0IDIyIiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPHBhdGggZD0iTTM2IDIxIFEzNiAxMiA0MCA4IFE0MCAxNSAzOCAyMiIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NyAyNSBRNTAgMTcgNTQgMTQgUTUyIDIxIDQ5IDI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPCEtLSBBY2NlbnQgZG90IGluIGNlbnRlciBwYWQg4oCUIHJlZCBicmFuZCB0b3VjaCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSI0NiIgcng9IjQiIHJ5PSIzLjUiIGZpbGw9IiNmZjNkMDAiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=') 16 16, pointer;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: landFadeUp .9s 1s cubic-bezier(.22,1,.36,1) forwards;
+    transition: border-color .35s, color .35s, gap .35s;
+  }
+  #explore-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,61,0,0.18), transparent);
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  #explore-btn:hover { border-color: rgba(255,61,0,0.9); color: #fff; gap: 20px; }
+  #explore-btn:hover::before { opacity: 1; }
+  .explore-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #ff3d00;
+    animation: blinkDot 2s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .explore-arrow {
+    font-size: 1rem;
+    transition: transform .35s;
+  }
+  #explore-btn:hover .explore-arrow { transform: translateX(6px); }
+
+  /* bottom tagline */
+  #landing-bottom {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(232,228,220,0.25);
+    white-space: nowrap;
+    z-index: 2;
+    opacity: 0;
+    animation: landFadeUp .8s 1.4s cubic-bezier(.22,1,.36,1) forwards;
+  }
+
+  /* scroll indicator */
+  #landing-scroll {
+    position: absolute;
+    bottom: 36px;
+    right: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+    opacity: 0;
+    animation: landFadeUp .8s 1.6s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  #landing-scroll span {
+    font-size: 0.55rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: rgba(232,228,220,0.3);
+    writing-mode: vertical-rl;
+  }
+  #landing-scroll::after {
+    content: '';
+    width: 1px;
+    height: 52px;
+    background: linear-gradient(to bottom, rgba(255,61,0,0.5), transparent);
+    animation: lineGrowL 1.5s 2s ease both;
+  }
+  @keyframes lineGrowL { from{height:0} to{height:52px} }
+
+  /* red accent lines */
+  .land-line {
+    position: absolute;
+    background: rgba(255,61,0,0.22);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .land-line-h { height: 1px; left: 0; right: 0; }
+  .land-line-v { width: 1px; top: 0; bottom: 0; }
+
+  @keyframes landFadeUp {
+    to { opacity: 1; transform: translateY(0) translateX(0); }
+  }
+
+  /* main site hidden until revealed */
+  #main-site {
+    opacity: 0;
+    transition: opacity 0s;
+  }
+  #main-site.visible {
+    opacity: 1;
+  }
+
+
+    /* ─── LOGO IMAGE ─── */
+    #nav-logo-img {
+      height: 56px;
+      width: auto;
+      display: block;
+      filter: invert(1) brightness(2);
+      transition: opacity .25s;
+    }
+    #nav-logo-img:hover { opacity: 0.8; }
+
+    #landing-logo-img {
+      height: 52px;
+      width: auto;
+      display: block;
+      filter: invert(1) brightness(2);
+      opacity: 0.9;
+    }
+
+    #cs-logo-img {
+      height: 30px;
+      width: auto;
+      display: block;
+      filter: invert(1) brightness(2);
+    }
+
+    /* override old text logo styles */
+    .nav-logo { line-height: 1; }
+    #landing-logo { line-height: 1; }
+    .cs-header-logo { line-height: 1; }
+
+    /* ─── NEW CURSOR OVERRIDE ─── */
+    body { cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIE1haW4gcGFkIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjQ0IiByeD0iMTYiIHJ5PSIxNCIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDwhLS0gQm90dG9tLWxlZnQgbG9iZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjAiIGN5PSI1NCIgcng9IjciIHJ5PSI1LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCA1NCkiLz4KICA8IS0tIEJvdHRvbS1yaWdodCBsb2JlIC0tPgogIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjU0IiByeD0iNyIgcnk9IjUuNSIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoMjAgNDQgNTQpIi8+CiAgPCEtLSBUb3AtbGVmdCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjE0IiBjeT0iMzQiIHJ4PSI2IiByeT0iNyIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDE0IDM0KSIvPgogIDwhLS0gVG9wLWNlbnRlci1sZWZ0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIyOCIgcng9IjYiIHJ5PSI3LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC01IDI0IDI4KSIvPgogIDwhLS0gVG9wLWNlbnRlci1yaWdodCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjM2IiBjeT0iMjciIHJ4PSI2IiByeT0iNy41IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSg1IDM2IDI3KSIvPgogIDwhLS0gVG9wLXJpZ2h0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzMiIgcng9IjYiIHJ5PSI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSgxMiA0OCAzMikiLz4KICA8IS0tIENsYXdzIC0tPgogIDxwYXRoIGQ9Ik0xMSAyOCBROCAyMCAxMCAxNCBRMTMgMjAgMTQgMjciIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8cGF0aCBkPSJNMjEgMjIgUTIwIDEzIDIzIDggUTI1IDE1IDI0IDIyIiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPHBhdGggZD0iTTM2IDIxIFEzNiAxMiA0MCA4IFE0MCAxNSAzOCAyMiIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NyAyNSBRNTAgMTcgNTQgMTQgUTUyIDIxIDQ5IDI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPCEtLSBBY2NlbnQgZG90IGluIGNlbnRlciBwYWQg4oCUIHJlZCBicmFuZCB0b3VjaCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSI0NiIgcng9IjQiIHJ5PSIzLjUiIGZpbGw9IiNmZjNkMDAiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=') 16 16, auto; }
+    a, button, [onclick], .page-dot, .cs-index-card, .brand-tile { cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIE1haW4gcGFkIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjQ0IiByeD0iMTYiIHJ5PSIxNCIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDwhLS0gQm90dG9tLWxlZnQgbG9iZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjAiIGN5PSI1NCIgcng9IjciIHJ5PSI1LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCA1NCkiLz4KICA8IS0tIEJvdHRvbS1yaWdodCBsb2JlIC0tPgogIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjU0IiByeD0iNyIgcnk9IjUuNSIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoMjAgNDQgNTQpIi8+CiAgPCEtLSBUb3AtbGVmdCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjE0IiBjeT0iMzQiIHJ4PSI2IiByeT0iNyIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDE0IDM0KSIvPgogIDwhLS0gVG9wLWNlbnRlci1sZWZ0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIyOCIgcng9IjYiIHJ5PSI3LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC01IDI0IDI4KSIvPgogIDwhLS0gVG9wLWNlbnRlci1yaWdodCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjM2IiBjeT0iMjciIHJ4PSI2IiByeT0iNy41IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSg1IDM2IDI3KSIvPgogIDwhLS0gVG9wLXJpZ2h0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzMiIgcng9IjYiIHJ5PSI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSgxMiA0OCAzMikiLz4KICA8IS0tIENsYXdzIC0tPgogIDxwYXRoIGQ9Ik0xMSAyOCBROCAyMCAxMCAxNCBRMTMgMjAgMTQgMjciIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8cGF0aCBkPSJNMjEgMjIgUTIwIDEzIDIzIDggUTI1IDE1IDI0IDIyIiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPHBhdGggZD0iTTM2IDIxIFEzNiAxMiA0MCA4IFE0MCAxNSAzOCAyMiIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NyAyNSBRNTAgMTcgNTQgMTQgUTUyIDIxIDQ5IDI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPCEtLSBBY2NlbnQgZG90IGluIGNlbnRlciBwYWQg4oCUIHJlZCBicmFuZCB0b3VjaCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSI0NiIgcng9IjQiIHJ5PSIzLjUiIGZpbGw9IiNmZjNkMDAiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=') 16 16, pointer; }
+    #cursor { display: none !important; }
+    .cs-index { padding: 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; background: transparent; border: none; margin: 0 56px 80px; }
+    .cs-index-card {
+      padding: 0; background: var(--bg);
+      cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIE1haW4gcGFkIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjQ0IiByeD0iMTYiIHJ5PSIxNCIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDwhLS0gQm90dG9tLWxlZnQgbG9iZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjAiIGN5PSI1NCIgcng9IjciIHJ5PSI1LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCA1NCkiLz4KICA8IS0tIEJvdHRvbS1yaWdodCBsb2JlIC0tPgogIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjU0IiByeD0iNyIgcnk9IjUuNSIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoMjAgNDQgNTQpIi8+CiAgPCEtLSBUb3AtbGVmdCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjE0IiBjeT0iMzQiIHJ4PSI2IiByeT0iNyIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDE0IDM0KSIvPgogIDwhLS0gVG9wLWNlbnRlci1sZWZ0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIyOCIgcng9IjYiIHJ5PSI3LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC01IDI0IDI4KSIvPgogIDwhLS0gVG9wLWNlbnRlci1yaWdodCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjM2IiBjeT0iMjciIHJ4PSI2IiByeT0iNy41IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSg1IDM2IDI3KSIvPgogIDwhLS0gVG9wLXJpZ2h0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzMiIgcng9IjYiIHJ5PSI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSgxMiA0OCAzMikiLz4KICA8IS0tIENsYXdzIC0tPgogIDxwYXRoIGQ9Ik0xMSAyOCBROCAyMCAxMCAxNCBRMTMgMjAgMTQgMjciIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8cGF0aCBkPSJNMjEgMjIgUTIwIDEzIDIzIDggUTI1IDE1IDI0IDIyIiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPHBhdGggZD0iTTM2IDIxIFEzNiAxMiA0MCA4IFE0MCAxNSAzOCAyMiIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NyAyNSBRNTAgMTcgNTQgMTQgUTUyIDIxIDQ5IDI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPCEtLSBBY2NlbnQgZG90IGluIGNlbnRlciBwYWQg4oCUIHJlZCBicmFuZCB0b3VjaCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSI0NiIgcng9IjQiIHJ5PSIzLjUiIGZpbGw9IiNmZjNkMDAiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=') 16 16, pointer;
+      transition: transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s;
+      position: relative; overflow: hidden; border-radius: 3px; border: none; height: 440px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .cs-index-card::after { display: none; }
+    .cs-index-card:hover { transform: translateY(-8px); box-shadow: 0 28px 56px rgba(0,0,0,0.55); }
+    .cs-card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .65s cubic-bezier(.22,1,.36,1); filter: brightness(0.5) saturate(0.8); }
+    .cs-index-card:hover .cs-card-bg { transform: scale(1.06); filter: brightness(0.6) saturate(0.9); }
+    .cs-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.05) 100%); }
+    .cs-card-content { position: relative; z-index: 2; padding: 32px; }
+    .cs-card-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .cs-card-tag { font-size: 0.57rem; letter-spacing: .13em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(255,61,0,0.45); color: rgba(255,107,53,0.85); background: rgba(0,0,0,0.25); backdrop-filter: blur(6px); }
+    .cs-card-num { font-family: var(--font-script); font-size: 0.95rem; color: rgba(232,228,220,0.35); margin-bottom: 4px; letter-spacing: .04em; }
+    .cs-card-brand { font-family: var(--font-display); font-size: 2.8rem; color: var(--white); line-height: .9; margin-bottom: 12px; letter-spacing: .02em; }
+    .cs-card-desc { font-size: 0.72rem; line-height: 1.7; color: rgba(232,228,220,0.6); margin-bottom: 18px; max-width: 280px; }
+    .cs-card-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 0.63rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); transition: gap .3s; }
+    .cs-index-card:hover .cs-card-cta { gap: 14px; }
+    .cs-full-meta-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(232,228,220,0.07); border: 1px solid rgba(232,228,220,0.07); margin: 32px 0 48px; }
+    .cs-meta-cell { padding: 20px 22px; background: var(--bg2); }
+    .cs-meta-cell-label { font-size: 0.57rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+    .cs-meta-cell-val { font-size: 0.82rem; color: var(--cream); font-weight: 500; }
+    .cs-hero-cover { width: 100%; height: 340px; background-size: cover; background-position: center; border-radius: 2px; margin-bottom: 48px; position: relative; overflow: hidden; filter: brightness(0.7) grayscale(0.15); }
+    .cs-hero-cover::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(15,15,15,0.6) 0%, transparent 50%); }
+    @media (max-width: 900px) {
+      .cs-index { margin: 0 0 60px; grid-template-columns: 1fr; gap: 16px; }
+      .cs-index-card { height: 320px; }
+      .cs-full-meta-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- CURSOR -->
-<div id="cursor">
-  <div class="ring"></div>
-  <div class="dot"></div>
+<!-- ═══ LANDING PAGE ═══ -->
+<div id="landing-page">
+  <!-- Animated canvas bg — replace with <video> when you have your own file -->
+  <canvas id="landing-canvas"></canvas>
+
+  <div id="landing-overlay"></div>
+  <div id="landing-grain"></div>
+
+  <!-- decorative lines -->
+  <div class="land-line land-line-h" style="top:20%"></div>
+  <div class="land-line land-line-h" style="bottom:18%"></div>
+  <div class="land-line land-line-v" style="left:8%"></div>
+  <div class="land-line land-line-v" style="right:8%"></div>
+
+  <!-- logo top-left -->
+  <div id="landing-logo"><img src="logo.png" alt="Laughing Lions" id="landing-logo-img"/></div>
+
+  <!-- tagline -->
+  <div id="landing-tagline">— We don't just build brands, we make them impossible to ignore —</div>
+
+  <!-- centre content -->
+  <div id="landing-center">
+    <div id="landing-wordmark">LAUGHING<br><span>LIONS</span></div>
+    <button id="explore-btn" onclick="enterSite()">
+      <span class="explore-dot"></span>
+      Let's Explore
+      <span class="explore-arrow">→</span>
+    </button>
+  </div>
+
+  <!-- bottom bar -->
+  <div id="landing-bottom">Advertising &nbsp;·&nbsp; Branding &nbsp;·&nbsp; Marketing &nbsp;·&nbsp; India</div>
+
+  <!-- right side scroll hint -->
+  <div id="landing-scroll"><span>Explore</span></div>
 </div>
 
-<!-- NAV -->
+<div id="main-site">
+<div id="cursor"><div class="ring"></div><div class="dot"></div></div>
 <nav id="nav">
-  <div class="nav-logo">LAUGHING LIONS</div>
+  <div class="nav-logo"><img src="logo.png" alt="Laughing Lions" id="nav-logo-img"/></div>
   <div class="nav-links">
-    <a href="#why">Why Us</a>
-    <a href="#whatwedo">Services</a>
-    <a href="#work">Work</a>
-    <a href="#contact">Contact</a>
+    <a href="#why">About</a><a href="#whatwedo">Services</a><a href="#work">Work</a>
+    <a href="#different">Approach</a><a href="#case-studies" id="nav-case-studies">Case Studies</a><a href="#contact">Contact</a>
   </div>
 </nav>
-
-<!-- PAGE DOTS -->
 <div id="page-dots"></div>
-
-<!-- ═══════════════════════════
-     HERO
-═══════════════════════════ -->
 <section id="hero">
+  <div class="hero-orb"></div>
   <div class="hero-bg-text">LIONS</div>
-
   <div class="hero-content reveal">
     <span class="hero-tag">— We don't just build brands,<br>We make them impossible to ignore —</span>
-    <h1 class="hero-title">
-      Laughing<br><span>Lions</span><br>Portfolio
-    </h1>
-    <p class="hero-subtitle">
-      <span>Branding</span> &nbsp;|&nbsp; <span>Design</span> &nbsp;|&nbsp; <span>Digital Marketing</span> &nbsp;|&nbsp; <span>PR & Communication</span>
-      &nbsp;&nbsp;&nbsp; Place · <span>India</span>
-    </p>
+    <h1 class="hero-title">Laughing<br><span>Lions</span></h1>
+    <p class="hero-subtitle"><span>Branding</span> &nbsp;·&nbsp; <span>Design</span> &nbsp;·&nbsp; <span>Digital Marketing</span> &nbsp;·&nbsp; <span>PR &amp; Media</span> &nbsp;·&nbsp; <span>Production</span> &nbsp;·&nbsp; <span>Exhibitions</span></p>
+    <div class="hero-pill">Available for new projects</div>
   </div>
-
   <div class="scroll-hint">Scroll</div>
-
   <div class="hero-marquee">
     <div class="marquee-inner">
-      <span>Branding</span> · Digital Marketing · PR · Design · Brand Communication · <span>Branding</span> · Digital Marketing · PR · Design · Brand Communication · <span>Branding</span> · Digital Marketing · PR · Design · Brand Communication · <span>Branding</span> · Digital Marketing · PR · Design · Brand Communication ·
+      <span>Branding</span> <span class="marquee-sep">✦</span> Design <span class="marquee-sep">✦</span> Digital Marketing <span class="marquee-sep">✦</span> PR &amp; Media <span class="marquee-sep">✦</span> Production &amp; Shoots <span class="marquee-sep">✦</span> Exhibitions <span class="marquee-sep">✦</span> Signage &amp; Wayfinding <span class="marquee-sep">✦</span> Advertising <span class="marquee-sep">✦</span>
+      <span>Branding</span> <span class="marquee-sep">✦</span> Design <span class="marquee-sep">✦</span> Digital Marketing <span class="marquee-sep">✦</span> PR &amp; Media <span class="marquee-sep">✦</span> Production &amp; Shoots <span class="marquee-sep">✦</span> Exhibitions <span class="marquee-sep">✦</span> Signage &amp; Wayfinding <span class="marquee-sep">✦</span> Advertising <span class="marquee-sep">✦</span>
     </div>
   </div>
 </section>
-
-<!-- ═══════════════════════════
-     WHY LAUGHING LIONS
-═══════════════════════════ -->
 <section id="why">
   <div class="why-grid">
     <div>
       <div class="sec-label reveal">About</div>
-      <span class="why-script reveal d1">-Not another "Full service" agency-</span>
+      <span class="why-script reveal d1">— Not another "Full Service" agency —</span>
       <h2 class="why-title reveal d2">Why<br>Laughing<br>Lions</h2>
+      <div class="why-stats reveal d3">
+        <div class="why-stat"><div class="why-stat-num">8+</div><div class="why-stat-label">Services</div></div>
+        <div class="why-stat"><div class="why-stat-num">3</div><div class="why-stat-label">Engagement Models</div></div>
+        <div class="why-stat"><div class="why-stat-num">360°</div><div class="why-stat-label">Brand Approach</div></div>
+      </div>
     </div>
     <div>
-      <p class="why-text reveal d1">
-        At Laughing Lions, we don't just build brands, we shape how they're experienced. Our end-to-end Advertising, Branding, and Marketing solutions are driven by strategy, storytelling, and a deep understanding of how audiences engage in today's digital-first world. We believe strong brands are built on meaningful narratives, not noise.
-      </p>
-      <p class="why-text reveal d2">
-        That's why we invest time in understanding your business, vision, and growth goals, working closely with decision-makers to create communication that feels authentic, relevant, and impactful.
-      </p>
-      <p class="why-text reveal d3">
-        In a cluttered digital landscape, influence comes from consistency, creativity, and intent. We focus on crafting influential digital ecosystems, especially social platforms that connect with audiences on a human level, spark interaction, and build long-term loyalty. Backed by research, powered by strategy, and executed with precision — Laughing Lions delivers creative solutions that don't just look good, they work.
-      </p>
+      <p class="why-text reveal d1">At Laughing Lions, we don't just build brands — we shape how they're experienced. Our end-to-end Advertising, Branding, and Marketing solutions are driven by strategy, storytelling, and a deep understanding of how audiences engage in today's digital-first world.</p>
+      <p class="why-text reveal d2">We believe strong brands are built on meaningful narratives, not noise. That's why we invest time in understanding your business, vision, and growth goals — working closely with decision-makers to create communication that feels authentic, relevant, and impactful.</p>
+      <p class="why-text reveal d3">In a cluttered digital landscape, influence comes from consistency, creativity, and intent. We focus on crafting influential digital ecosystems — especially social platforms — that connect with audiences on a human level, spark interaction, and build long-term loyalty.</p>
+      <p class="why-text reveal d4">Backed by research, powered by strategy, and executed with precision — Laughing Lions delivers creative solutions that don't just look good, they <em>work</em>.</p>
     </div>
   </div>
 </section>
-
-<!-- ═══════════════════════════
-     WHAT WE DO
-═══════════════════════════ -->
 <section id="whatwedo">
   <div class="sec-label reveal">Services</div>
-  <h2 class="services-title reveal d1">What We Do</h2>
+  <div class="services-header reveal d1">
+    <h2 class="services-title">What<br>We Do</h2>
+    <p class="services-tagline">End-to-end brand building — from identity to execution, strategy to screens.</p>
+  </div>
   <div class="services-grid reveal d2">
-    <div class="service-card">
-      <div class="service-num">01</div>
-      <div class="service-name">Branding</div>
-      <div class="service-desc">Shaping how a brand is perceived, remembered, and chosen.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">02</div>
-      <div class="service-name">Designing</div>
-      <div class="service-desc">Every visual element made to communicate and represent.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">03</div>
-      <div class="service-name">Digital Marketing</div>
-      <div class="service-desc">Strategy, creativity, and data for measurable brand value.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">04</div>
-      <div class="service-name">PR & Media</div>
-      <div class="service-desc">Credibility, relevance, and long-term visibility for brands.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-num">05</div>
-      <div class="service-name">Brand Communication</div>
-      <div class="service-desc">Authentic narratives that resonate with the right audiences.</div>
-    </div>
+    <div class="service-card"><div class="service-num">01</div><div class="service-name">Branding</div><div class="service-desc">Shaping how a brand is perceived, remembered, and chosen. Identity, positioning, tone of voice.</div></div>
+    <div class="service-card"><div class="service-num">02</div><div class="service-name">Designing</div><div class="service-desc">Logos, campaigns, collaterals, on-ground experiences. Every visual made to communicate first, impress second.</div></div>
+    <div class="service-card"><div class="service-num">03</div><div class="service-name">Digital Marketing</div><div class="service-desc">Strategy, content, performance, analytics. Meaningful engagement and measurable brand value.</div></div>
+    <div class="service-card"><div class="service-num">04</div><div class="service-name">PR &amp; Media</div><div class="service-desc">Credibility, relevance, long-term visibility. Stories that reach the right rooms.</div></div>
   </div>
-  <span class="services-script reveal d3">-If it shapes perception, we probably do it-</span>
+  <div class="services-bottom reveal d3">
+    <div class="service-mini"><div class="service-mini-dot"></div><div class="service-mini-name">Production &amp; Shoots</div></div>
+    <div class="service-mini"><div class="service-mini-dot"></div><div class="service-mini-name">Advertising</div></div>
+    <div class="service-mini"><div class="service-mini-dot"></div><div class="service-mini-name">Signage &amp; Wayfinding</div></div>
+    <div class="service-mini"><div class="service-mini-dot"></div><div class="service-mini-name">Exhibition — Design &amp; Production</div></div>
+  </div>
 </section>
-
-<!-- ═══════════════════════════
-     BRANDING DETAIL
-═══════════════════════════ -->
 <section class="detail-section" id="branding">
-  <div class="detail-bg-img" style="background-image:url('https://images.unsplash.com/photo-1493421419110-74f4e85ba126?w=1600&q=80')"></div>
-  <div class="detail-content">
-    <div class="sec-label reveal">01</div>
-    <h2 class="detail-title reveal d1">Branding</h2>
-    <p class="detail-tagline reveal d2">The strategic process of shaping how a brand is perceived, remembered, and chosen. It defines a brand's identity, personality, promise, and position in the market.</p>
-    <div class="detail-cards reveal d3">
-      <div class="detail-card">
-        <div class="detail-card-title">Brand Positioning & Identity</div>
-        <div class="detail-card-text">Defining what the brand stands for, who it speaks to, and how it differentiates itself in the market.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Visual Language & Brand Systems</div>
-        <div class="detail-card-text">Building a cohesive visual framework including colors, typography, layouts, and design rules that ensure the brand looks recognisable across every platform.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Naming, Tone of Voice & Guidelines</div>
-        <div class="detail-card-text">Crafting brand names, messaging style, and verbal identity that reflect the brand's personality.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Rebranding & Brand Refresh</div>
-        <div class="detail-card-text">Reworking or refining existing brands to align with evolving business goals, market shifts, or audience expectations.</div>
-      </div>
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1493421419110-74f4e85ba126?w=1600&q=80" data-fallback="linear-gradient(135deg,#1a0a00 0%,#3d1400 40%,#1a0800 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">01</div><div class="detail-num-big reveal d1">01</div><h2 class="detail-title reveal d1">Branding</h2><p class="detail-tagline reveal d2">The strategic process of shaping how a brand is perceived, remembered, and chosen.</p><span class="detail-script reveal d3">— Brands with backbone, not just a logo —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Brand Positioning &amp; Identity</div><div class="detail-card-text">Defining what the brand stands for, who it speaks to, and how it differentiates itself in the market.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Visual Language &amp; Brand Systems</div><div class="detail-card-text">Building a cohesive visual framework — colors, typography, layouts, design rules — consistent across every platform.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Naming, Tone of Voice &amp; Guidelines</div><div class="detail-card-text">Crafting brand names, messaging style, and verbal identity that reflect the brand's personality.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Rebranding &amp; Brand Refresh</div><div class="detail-card-text">Reworking or refining existing brands to align with evolving business goals and audience expectations.</div></div>
     </div>
-    <span class="detail-script reveal d4">-Brands with backbone, not just logo-</span>
-  </div>
+  </div></div>
 </section>
-
-<!-- ═══════════════════════════
-     DESIGN DETAIL
-═══════════════════════════ -->
 <section class="detail-section" id="design">
-  <div class="detail-bg-img" style="background-image:url('https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1600&q=80')"></div>
-  <div class="detail-content">
-    <div class="sec-label reveal">02</div>
-    <h2 class="detail-title reveal d1">Design</h2>
-    <p class="detail-tagline reveal d2">Every visual element is created to communicate clearly, function seamlessly, and represent the brand consistently before it ever tries to impress.</p>
-    <div class="detail-cards reveal d3">
-      <div class="detail-card">
-        <div class="detail-card-title">Logo Design & Identity Systems</div>
-        <div class="detail-card-text">Creating distinctive logos and scalable identity systems that form the visual foundation of the brand, ensuring consistency.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Signage & Graphics</div>
-        <div class="detail-card-text">Designing wayfinding, signages, and spatial graphics that enhance visibility, improve navigation, and strengthen brand presence.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">On-Ground Branding</div>
-        <div class="detail-card-text">Conceptualising and designing on-ground brand experiences that attract attention and engage audiences in real-world environments.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Marketing Collaterals & Campaign Creatives</div>
-        <div class="detail-card-text">Developing high-impact creatives for campaigns, promotions, and marketing materials that align with brand strategy while driving recall and action.</div>
-      </div>
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1600&q=80" data-fallback="linear-gradient(135deg,#0a0a1a 0%,#12103a 40%,#080818 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">02</div><div class="detail-num-big reveal d1">02</div><h2 class="detail-title reveal d1">Design</h2><p class="detail-tagline reveal d2">Every visual element created to communicate clearly, function seamlessly, and represent the brand consistently.</p><span class="detail-script reveal d3">— Design isn't decoration. It's communication made visible. —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Logo Design &amp; Identity Systems</div><div class="detail-card-text">Creating distinctive logos and scalable identity systems that form the visual foundation of the brand.</div></div>
+      <div class="detail-card"><div class="detail-card-title">On-Ground Branding</div><div class="detail-card-text">Conceptualising and designing on-ground brand experiences that attract attention and engage audiences in real-world environments.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Marketing Collaterals &amp; Campaign Creatives</div><div class="detail-card-text">Developing high-impact creatives for campaigns and marketing materials that drive recall and action.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Signage &amp; Wayfinding Systems</div><div class="detail-card-text">Designing navigation systems and retail signage that enhance visibility and reinforce brand presence in physical spaces.</div></div>
     </div>
-    <span class="detail-script reveal d4">-Design for us isn't decoration, it's communication made visible-</span>
-  </div>
+  </div></div>
 </section>
-
-<!-- ═══════════════════════════
-     DIGITAL MARKETING DETAIL
-═══════════════════════════ -->
 <section class="detail-section" id="digital">
-  <div class="detail-bg-img" style="background-image:url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600&q=80')"></div>
-  <div class="detail-content">
-    <div class="sec-label reveal">03</div>
-    <h2 class="detail-title reveal d1">Digital<br>Marketing</h2>
-    <p class="detail-tagline reveal d2">Our digital marketing approach is driven by strategy, creativity, and data. We focus on building meaningful engagement, measurable performance, and long-term brand value.</p>
-    <div class="detail-cards reveal d3">
-      <div class="detail-card">
-        <div class="detail-card-title">Social Media Strategy & Content</div>
-        <div class="detail-card-text">Developing platform-specific strategies and content that reflect the brand's voice, build communities, and create consistent, relevant engagement.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Performance Marketing</div>
-        <div class="detail-card-text">Planning and executing targeted ad campaigns focused on reach, conversions, and ROI.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Campaign Planning & Execution</div>
-        <div class="detail-card-text">Conceptualising and managing digital campaigns from idea to rollout, ensuring seamless execution across platforms.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Analytics-Backed Optimisation</div>
-        <div class="detail-card-text">Tracking performance through data and insights to refine strategies, improve outcomes, and ensure every decision is informed by real results.</div>
-      </div>
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600&q=80" data-fallback="linear-gradient(135deg,#001a0f 0%,#003320 40%,#001510 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">03</div><div class="detail-num-big reveal d1">03</div><h2 class="detail-title reveal d1">Digital<br>Marketing</h2><p class="detail-tagline reveal d2">Strategy, creativity, and data working together. Meaningful engagement, measurable performance, long-term brand value.</p><span class="detail-script reveal d3">— Clicks are easy. Impact takes thought. —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Social Media Strategy &amp; Content</div><div class="detail-card-text">Platform-specific strategies and content that reflect the brand's voice and build communities.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Performance Marketing</div><div class="detail-card-text">Planning and executing targeted ad campaigns focused on reach, conversions, and ROI — every rupee accountable.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Campaign Planning &amp; Execution</div><div class="detail-card-text">Conceptualising and managing digital campaigns from idea to rollout, staying aligned with brand objectives.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Analytics-Backed Optimisation</div><div class="detail-card-text">Tracking performance through data and insights to refine strategies and ensure every decision is informed by real results.</div></div>
     </div>
-    <span class="detail-script reveal d4">-Clicks Are Easy. Impact Takes Thought.-</span>
-  </div>
+  </div></div>
 </section>
-
-<!-- ═══════════════════════════
-     PR DETAIL
-═══════════════════════════ -->
+<section class="detail-section" id="production">
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=80" data-fallback="linear-gradient(135deg,#1a0f00 0%,#2e1a00 40%,#150c00 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">04</div><div class="detail-num-big reveal d1">04</div><h2 class="detail-title reveal d1">Production<br>&amp; Shoots</h2><p class="detail-tagline reveal d2">High-quality visual production across digital campaigns, social media, advertisements, events, and branded content.</p><span class="detail-script reveal d3">— Every frame is a decision. We make them count. —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Creative Direction &amp; Concept Development</div><div class="detail-card-text">Building visual concepts and shoot directions that align with brand positioning and campaign objectives.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Photography &amp; Video Production</div><div class="detail-card-text">Executing high-quality shoots across digital campaigns, social media, advertisements, events, and branded content.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Post-Production &amp; Content Delivery</div><div class="detail-card-text">Editing, colour grading, motion graphics, and optimising content for multi-platform usage.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Multi-Platform Output</div><div class="detail-card-text">From Instagram reels to billboard stills — assets sized, formatted, and optimised for every medium.</div></div>
+    </div>
+  </div></div>
+</section>
 <section class="detail-section" id="pr">
-  <div class="detail-bg-img" style="background-image:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1600&q=80')"></div>
-  <div class="detail-content">
-    <div class="sec-label reveal">04</div>
-    <h2 class="detail-title reveal d1">Public<br>Relations</h2>
-    <p class="detail-tagline reveal d2">Our PR approach focuses on credibility, relevance, and long-term visibility. We help brands communicate their stories in a way that feels authentic, timely, and aligned with their business objectives.</p>
-    <div class="detail-cards reveal d3">
-      <div class="detail-card">
-        <div class="detail-card-title">Media Relations</div>
-        <div class="detail-card-text">Building strong relationships with media platforms to secure meaningful coverage that enhances brand credibility and reaches the right audiences.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Brand Storytelling</div>
-        <div class="detail-card-text">Crafting compelling narratives and press materials that clearly communicate the brand's vision, milestones, and news.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Influencer & Opinion Leader Outreach</div>
-        <div class="detail-card-text">Collaborating with relevant influencers and opinion leaders to amplify brand messages through trusted voices that resonate with target audiences.</div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Strategic Visibility, Not Random Noise</div>
-        <div class="detail-card-text">Focusing on quality placements and purposeful communication to ensure the brand stays visible for the right reasons, in the right spaces.</div>
-      </div>
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1600&q=80" data-fallback="linear-gradient(135deg,#0a001a 0%,#1a0030 40%,#080015 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">05</div><div class="detail-num-big reveal d1">05</div><h2 class="detail-title reveal d1">Public<br>Relations</h2><p class="detail-tagline reveal d2">Credibility, relevance, and long-term visibility. Stories that reach the right rooms and build the right reputation.</p><span class="detail-script reveal d3">— PR isn't about being everywhere. It's about being remembered. —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Media Relations</div><div class="detail-card-text">Building strong relationships with media platforms to secure meaningful coverage that enhances brand credibility.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Brand Storytelling</div><div class="detail-card-text">Crafting compelling narratives and press materials that clearly communicate the brand's vision, milestones, and news.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Influencer &amp; Opinion Leader Outreach</div><div class="detail-card-text">Collaborating with relevant influencers to amplify brand messages through trusted voices.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Strategic Visibility, Not Random Noise</div><div class="detail-card-text">Quality placements and purposeful communication — visible for the right reasons, in the right spaces.</div></div>
     </div>
-    <span class="detail-script reveal d4">-PR isn't about being everywhere, It's about being remembered.-</span>
-  </div>
+  </div></div>
 </section>
-
-<!-- ═══════════════════════════
-     WHAT WE DO DIFFERENTLY
-═══════════════════════════ -->
+<section class="detail-section" id="advertising">
+  <div class="detail-bg-img" data-src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1600&q=80" data-fallback="linear-gradient(135deg,#1a0000 0%,#350000 40%,#150000 100%)"></div>
+  <div class="detail-content"><div class="detail-layout">
+    <div><div class="sec-label reveal">06</div><div class="detail-num-big reveal d1">06</div><h2 class="detail-title reveal d1">Advertising</h2><p class="detail-tagline reveal d2">Combining strategy, creativity, and audience insight to build campaigns that stay relevant long after they're seen.</p><span class="detail-script reveal d3">— Made to be seen. Built to be remembered. —</span></div>
+    <div class="detail-cards reveal d2">
+      <div class="detail-card"><div class="detail-card-title">Campaign Strategy &amp; Planning</div><div class="detail-card-text">Insight-driven advertising strategies aligned with brand goals, audience behaviour, and market positioning.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Print, Outdoor &amp; Digital Advertising</div><div class="detail-card-text">Designing and executing advertising solutions across social media, billboards, print, and performance ads.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Integrated Brand Communication</div><div class="detail-card-text">Every campaign communicates consistently across platforms while strengthening the overall brand narrative.</div></div>
+      <div class="detail-card"><div class="detail-card-title">Exhibition — Design &amp; Production</div><div class="detail-card-text">Full-service exhibition solutions — from concept design to on-site execution for trade shows and brand showcases.</div></div>
+    </div>
+  </div></div>
+</section>
 <section id="different">
   <div class="sec-label reveal">Our Approach</div>
   <h2 class="diff-title reveal d1">What We Do<br>Differently</h2>
   <ul class="diff-list">
-    <li class="diff-item reveal d1">
-      <span class="diff-num">01</span>
-      <span class="diff-text">Understand the brand before touching design</span>
-      <span class="diff-arrow">→</span>
-    </li>
-    <li class="diff-item reveal d2">
-      <span class="diff-num">02</span>
-      <span class="diff-text">Ask the necessary questions</span>
-      <span class="diff-arrow">→</span>
-    </li>
-    <li class="diff-item reveal d3">
-      <span class="diff-num">03</span>
-      <span class="diff-text">Build ideas that work across platforms</span>
-      <span class="diff-arrow">→</span>
-    </li>
-    <li class="diff-item reveal d4">
-      <span class="diff-num">04</span>
-      <span class="diff-text">Execute with obsessive attention to detail</span>
-      <span class="diff-arrow">→</span>
-    </li>
-    <li class="diff-item reveal d5">
-      <span class="diff-num">05</span>
-      <span class="diff-text">Measure, refine, repeat</span>
-      <span class="diff-arrow">→</span>
-    </li>
+    <li class="diff-item reveal d1"><span class="diff-num">01</span><span class="diff-text">Understand the brand before touching design</span><span class="diff-arrow">→</span></li>
+    <li class="diff-item reveal d2"><span class="diff-num">02</span><span class="diff-text">Ask the necessary questions</span><span class="diff-arrow">→</span></li>
+    <li class="diff-item reveal d3"><span class="diff-num">03</span><span class="diff-text">Build ideas that work across platforms</span><span class="diff-arrow">→</span></li>
+    <li class="diff-item reveal d4"><span class="diff-num">04</span><span class="diff-text">Execute with obsessive attention to detail</span><span class="diff-arrow">→</span></li>
+    <li class="diff-item reveal d5"><span class="diff-num">05</span><span class="diff-text">Measure, refine, repeat</span><span class="diff-arrow">→</span></li>
   </ul>
-  <span class="diff-script reveal">-Simple. Honest. Effective.-</span>
+  <span class="diff-script reveal">— Simple. Honest. Effective. —</span>
 </section>
-
-<!-- ═══════════════════════════
-     OUR WORK
-═══════════════════════════ -->
 <section id="work">
   <div class="sec-label reveal">Portfolio</div>
   <h2 class="work-title reveal d1">Our Work</h2>
   <p class="work-subtitle reveal d2">Some brands we've built and grown</p>
-  <div class="brands-row">
-    <div class="brand-tile reveal d1">
-      <div style="width:64px;height:64px;border-radius:50%;border:2px solid rgba(232,228,220,0.3);display:flex;align-items:center;justify-content:center;">
-        <span style="font-family:var(--font-script);font-size:1.2rem;color:var(--dim)">LL</span>
-      </div>
-      <div class="brand-name">Retainer</div>
-      <div class="brand-tag">Client Brand</div>
-    </div>
-    <div class="brand-tile reveal d2">
-      <div class="brand-logo-mm">MIRCH<br><span class="chili">MASALA</span></div>
-      <div class="brand-tag">Ek Zinda Dil Restaurant</div>
-    </div>
-    <div class="brand-tile reveal d3">
-      <div class="brand-logo-sh">▲ SHIVORA</div>
-      <div class="brand-tag">Brand Identity</div>
-    </div>
-    <div class="brand-tile reveal d4">
-      <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--cream)">ELIRA</div>
-      <div class="brand-tag">On-Ground Branding</div>
-    </div>
+  <div class="brands-grid">
+    <div class="brand-tile reveal d1"><div class="brand-icon"><span style="font-family:var(--font-script);font-size:1.1rem;color:var(--accent)">MM</span></div><div class="brand-name">MIRCH<br>MASALA</div><div class="brand-tag">Ek Zinda Dil Restaurant</div><div class="brand-service-tags"><span class="bst">Branding</span><span class="bst">Digital</span><span class="bst">Design</span></div></div>
+    <div class="brand-tile reveal d2"><div class="brand-icon"><span style="font-family:var(--font-display);font-size:1rem;color:var(--cream)">▲</span></div><div class="brand-name">SHIVORA</div><div class="brand-tag">Brand Identity</div><div class="brand-service-tags"><span class="bst">Identity</span><span class="bst">Visual System</span></div></div>
+    <div class="brand-tile reveal d3"><div class="brand-icon"><span style="font-family:var(--font-display);font-size:0.9rem;color:var(--cream)">◈</span></div><div class="brand-name">ELIRA</div><div class="brand-tag">On-Ground Branding</div><div class="brand-service-tags"><span class="bst">On-Ground</span><span class="bst">Signage</span></div></div>
+    <div class="brand-tile reveal d4"><div class="brand-icon"><span style="font-family:var(--font-script);font-size:1.1rem;color:var(--dim)">R+</span></div><div class="brand-name">RETAINER<br>CLIENT</div><div class="brand-tag">Ongoing Partnership</div><div class="brand-service-tags"><span class="bst">Full Retainer</span></div></div>
   </div>
 </section>
-
-<!-- ═══════════════════════════
-     HOW WE ENGAGE
-═══════════════════════════ -->
 <section id="engage">
   <div class="sec-label reveal">Engagement Models</div>
   <h2 class="engage-title reveal d1">How We<br>Engage</h2>
   <div class="engage-models">
-    <div class="engage-card reveal d1">
-      <div class="engage-card-num">01</div>
-      <div class="engage-card-title">Project<br>Based</div>
-      <div class="engage-card-desc">Defined scope, clear deliverables, and a focused timeline. Perfect for launches, rebrands, or one-time campaigns.</div>
-    </div>
-    <div class="engage-card reveal d2">
-      <div class="engage-card-num">02</div>
-      <div class="engage-card-title">Retainer<br>Models</div>
-      <div class="engage-card-desc">Ongoing partnership for consistent brand management, content, and strategic direction month over month.</div>
-    </div>
-    <div class="engage-card reveal d3">
-      <div class="engage-card-num">03</div>
-      <div class="engage-card-title">Campaign<br>Specific</div>
-      <div class="engage-card-desc">Collaborations built around a single campaign — from concept to rollout — with full creative and strategic support.</div>
-    </div>
+    <div class="engage-card reveal d1"><div class="engage-card-num">01</div><div class="engage-card-title">Project<br>Based</div><div class="engage-card-desc">Defined scope, clear deliverables, and a focused timeline. Perfect for launches, rebrands, or one-time campaigns.</div></div>
+    <div class="engage-card reveal d2"><div class="engage-card-num">02</div><div class="engage-card-title">Retainer<br>Models</div><div class="engage-card-desc">Ongoing partnership for consistent brand management, content, and strategic direction — month over month, always aligned.</div></div>
+    <div class="engage-card reveal d3"><div class="engage-card-num">03</div><div class="engage-card-title">Campaign<br>Specific</div><div class="engage-card-desc">Collaborations built around a single campaign — from concept to rollout — with full creative and strategic support.</div></div>
   </div>
-  <span class="engage-script reveal d4">-We adapt to your needs not the other way around-</span>
+  <span class="engage-script reveal d4">— We adapt to your needs, not the other way around —</span>
 </section>
-
-<!-- ═══════════════════════════
-     CTA
-═══════════════════════════ -->
 <section id="cta">
-  <div class="cta-bg"></div>
+  <div class="cta-bg"></div><div class="cta-ring"></div><div class="cta-ring"></div><div class="cta-ring"></div>
   <div class="cta-content">
     <h2 class="cta-title reveal">Let's build something<br>worth remembering</h2>
-    <div class="cta-wants reveal d1">
-      <span>A brand that feels intentional</span>
-      <span>Design that communicates</span>
-      <span>Marketing that does not feel forced</span>
-    </div>
+    <div class="cta-wants reveal d1"><span>A brand that feels intentional</span><span>Design that communicates</span><span>Marketing that does not feel forced</span></div>
     <div class="cta-close reveal d2">You're already in the right room</div>
   </div>
 </section>
-
-<!-- ═══════════════════════════
-     CONTACT
-═══════════════════════════ -->
 <section id="contact">
-  <h2 class="contact-big reveal">Let's Work<br><span>Together!</span></h2>
+  <h2 class="contact-big reveal">Let's Work<br><span>Together.</span></h2>
   <div class="contact-row">
-    <div class="contact-block reveal d1">
-      <div class="contact-label">Contact us</div>
-      <a class="contact-val" href="tel:+919274742186">+91 92747 42186</a>
-    </div>
-    <div class="contact-block reveal d2">
-      <div class="contact-label">Email us</div>
-      <a class="contact-val" href="mailto:laughingliosurat@gmail.com">laughingliosurat@gmail.com</a>
-    </div>
-    <div class="contact-block reveal d3">
-      <div class="contact-label">Instagram</div>
-      <a class="contact-val" href="https://instagram.com/laughinglionsden" target="_blank">@laughinglionsden</a>
-    </div>
-    <div class="contact-block reveal d4">
-      <div class="contact-label">Place</div>
-      <span class="contact-val">India</span>
-    </div>
+    <div class="contact-block reveal d1"><div class="contact-label">Call us</div><a class="contact-val" href="tel:+919274742186">+91 92747 42186</a></div>
+    <div class="contact-block reveal d2"><div class="contact-label">Email us</div><a class="contact-val" href="mailto:laughinglionsurat@gmail.com">laughinglionsurat@gmail.com</a></div>
+    <div class="contact-block reveal d3"><div class="contact-label">Instagram</div><a class="contact-val" href="https://instagram.com/laughinglionsden" target="_blank">@laughinglionsden</a></div>
+    <div class="contact-block reveal d4"><div class="contact-label">Based in</div><span class="contact-val">India</span></div>
   </div>
+  <div class="contact-footer reveal d5">© Laughing Lions &nbsp;·&nbsp; Advertising · Branding · Marketing &nbsp;·&nbsp; India</div>
 </section>
-
 <script>
-  /* ── CURSOR ── */
-  const cursor = document.getElementById('cursor');
-  const dot = cursor.querySelector('.dot');
-  const ring = cursor.querySelector('.ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-  function animateCursor() {
-    rx += (mx - rx) * 0.13;
-    ry += (my - ry) * 0.13;
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
-
-  /* ── SCROLL REVEAL ── */
+  (function() {
+    var pawUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIE1haW4gcGFkIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjQ0IiByeD0iMTYiIHJ5PSIxNCIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDwhLS0gQm90dG9tLWxlZnQgbG9iZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjAiIGN5PSI1NCIgcng9IjciIHJ5PSI1LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCA1NCkiLz4KICA8IS0tIEJvdHRvbS1yaWdodCBsb2JlIC0tPgogIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjU0IiByeD0iNyIgcnk9IjUuNSIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoMjAgNDQgNTQpIi8+CiAgPCEtLSBUb3AtbGVmdCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjE0IiBjeT0iMzQiIHJ4PSI2IiByeT0iNyIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEwIDE0IDM0KSIvPgogIDwhLS0gVG9wLWNlbnRlci1sZWZ0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIyOCIgcng9IjYiIHJ5PSI3LjUiIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHRyYW5zZm9ybT0icm90YXRlKC01IDI0IDI4KSIvPgogIDwhLS0gVG9wLWNlbnRlci1yaWdodCB0b2UgLS0+CiAgPGVsbGlwc2UgY3g9IjM2IiBjeT0iMjciIHJ4PSI2IiByeT0iNy41IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSg1IDM2IDI3KSIvPgogIDwhLS0gVG9wLXJpZ2h0IHRvZSAtLT4KICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzMiIgcng9IjYiIHJ5PSI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS41IiB0cmFuc2Zvcm09InJvdGF0ZSgxMiA0OCAzMikiLz4KICA8IS0tIENsYXdzIC0tPgogIDxwYXRoIGQ9Ik0xMSAyOCBROCAyMCAxMCAxNCBRMTMgMjAgMTQgMjciIGZpbGw9IiNmNWYzZWYiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICA8cGF0aCBkPSJNMjEgMjIgUTIwIDEzIDIzIDggUTI1IDE1IDI0IDIyIiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPHBhdGggZD0iTTM2IDIxIFEzNiAxMiA0MCA4IFE0MCAxNSAzOCAyMiIgZmlsbD0iI2Y1ZjNlZiIgc3Ryb2tlPSIjMWExYTFhIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NyAyNSBRNTAgMTcgNTQgMTQgUTUyIDIxIDQ5IDI3IiBmaWxsPSIjZjVmM2VmIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMS4yIi8+CiAgPCEtLSBBY2NlbnQgZG90IGluIGNlbnRlciBwYWQg4oCUIHJlZCBicmFuZCB0b3VjaCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSI0NiIgcng9IjQiIHJ5PSIzLjUiIGZpbGw9IiNmZjNkMDAiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=';
+    var s = document.createElement('style');
+    s.textContent = '* { cursor: url("' + pawUrl + '") 16 16, auto !important; }';
+    document.head.appendChild(s);
+  })();
   const reveals = document.querySelectorAll('.reveal');
-  const ro = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-  }, { threshold: 0.12 });
+  const ro = new IntersectionObserver(e => e.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); }), { threshold: 0.1 });
   reveals.forEach(el => ro.observe(el));
-
-  /* ── NAV SCROLL ── */
   const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 60);
-  });
-
-  /* ── PAGE DOTS ── */
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
   const sections = document.querySelectorAll('section');
   const dotsContainer = document.getElementById('page-dots');
-  sections.forEach((sec, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'page-dot';
-    dot.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' }));
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = document.querySelectorAll('.page-dot');
-  const dotObserver = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        dots.forEach(d => d.classList.remove('active'));
-        const idx = Array.from(sections).indexOf(e.target);
-        if (dots[idx]) dots[idx].classList.add('active');
-      }
-    });
-  }, { threshold: 0.5 });
-  sections.forEach(s => dotObserver.observe(s));
-
-  /* ── HERO PARALLAX ── */
+  sections.forEach((sec, i) => { const d = document.createElement('div'); d.className = 'page-dot'; d.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' })); dotsContainer.appendChild(d); });
+  const pageDots = document.querySelectorAll('.page-dot');
+  const dotObs = new IntersectionObserver(e => { e.forEach(el => { if (el.isIntersecting) { pageDots.forEach(d => d.classList.remove('active')); const idx = Array.from(sections).indexOf(el.target); if (pageDots[idx]) pageDots[idx].classList.add('active'); } }); }, { threshold: 0.5 });
+  sections.forEach(s => dotObs.observe(s));
   const heroBgText = document.querySelector('.hero-bg-text');
-  window.addEventListener('scroll', () => {
-    if (heroBgText) {
-      heroBgText.style.transform = `translate(-50%, calc(-52% + ${window.scrollY * 0.3}px))`;
-    }
-  });
-
-  /* ── DETAIL BG PARALLAX ── */
+  const heroBgOrb = document.querySelector('.hero-orb');
+  window.addEventListener('scroll', () => { const sy = window.scrollY; if (heroBgText) heroBgText.style.transform = `translate(-50%, calc(-52% + ${sy * 0.28}px))`; if (heroBgOrb) heroBgOrb.style.transform = `translate(-50%, calc(-55% + ${sy * 0.2}px))`; });
   const bgImgs = document.querySelectorAll('.detail-bg-img');
-  window.addEventListener('scroll', () => {
-    bgImgs.forEach(img => {
-      const rect = img.parentElement.getBoundingClientRect();
-      const offset = -rect.top * 0.15;
-      img.style.transform = `translateY(${offset}px)`;
-    });
-  });
+  window.addEventListener('scroll', () => { bgImgs.forEach(img => { const rect = img.parentElement.getBoundingClientRect(); img.style.transform = `translateY(${-rect.top * 0.12}px)`; }); });
+  function loadBgImgs() { document.querySelectorAll('.detail-bg-img[data-src]').forEach(el => { const src = el.dataset.src; const fallback = el.dataset.fallback; const img = new Image(); img.onload = () => { el.style.backgroundImage = "url('" + src + "')"; }; img.onerror = () => { el.style.background = fallback; el.style.opacity = '0.35'; el.style.filter = 'none'; }; img.src = src; el.style.background = fallback; el.style.opacity = '0.18'; el.style.filter = 'none'; }); }
+  loadBgImgs();
+  function loadCsCardBgs() { document.querySelectorAll('.cs-card-bg[style]').forEach(el => { const style = el.getAttribute('style'); const match = style.match(/url\('([^']+)'\)/); if (match) { const img = new Image(); img.onload = () => { el.style.backgroundImage = "url('" + match[1] + "')"; }; img.onerror = () => { el.style.background = '#1a0a00'; }; img.src = match[1]; } }); }
+  function openCaseStudies() { document.getElementById('cs-overlay').classList.add('open'); document.body.style.overflow = 'hidden'; backToIndex(); setTimeout(loadCsCardBgs, 100); }
+  function closeCaseStudies() { document.getElementById('cs-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function showCase(idx) { document.getElementById('cs-index-view').style.display = 'none'; document.querySelectorAll('.cs-full').forEach(function(el) { el.classList.remove('active'); }); document.getElementById('cs-' + idx).classList.add('active'); document.getElementById('cs-overlay').scrollTop = 0; }
+  function backToIndex() { document.querySelectorAll('.cs-full').forEach(function(el) { el.classList.remove('active'); }); document.getElementById('cs-index-view').style.display = 'block'; document.getElementById('cs-overlay').scrollTop = 0; }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeCaseStudies(); });
+
+  /* ─── LANDING PAGE — CANVAS ANIMATED BACKGROUND ─── */
+  (function() {
+    var canvas = document.getElementById('landing-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // --- Particles ---
+    var particles = [];
+    var PARTICLE_COUNT = 90;
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.4 + 0.3,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        alpha: Math.random() * 0.5 + 0.1,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.012 + 0.005,
+        warm: Math.random() > 0.75
+      });
+    }
+
+    // --- Light streaks ---
+    var streaks = [];
+    var STREAK_COUNT = 7;
+    function makeStreak() {
+      return {
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight * 0.6,
+        len: Math.random() * 180 + 80,
+        angle: Math.PI * (0.08 + Math.random() * 0.06),
+        alpha: 0,
+        maxAlpha: Math.random() * 0.12 + 0.04,
+        phase: 'in',
+        speed: Math.random() * 0.004 + 0.002,
+        width: Math.random() * 1.2 + 0.3,
+        warm: Math.random() > 0.6
+      };
+    }
+    for (var s = 0; s < STREAK_COUNT; s++) {
+      var st = makeStreak();
+      st.alpha = Math.random() * st.maxAlpha;
+      streaks.push(st);
+    }
+
+    // --- Orbs (soft radial glows) ---
+    var orbs = [
+      { x: 0.15, y: 0.3,  r: 0.28, a: 0.07, da: 0.00015, warm: true  },
+      { x: 0.82, y: 0.65, r: 0.22, a: 0.05, da: 0.0002,  warm: false },
+      { x: 0.5,  y: 0.85, r: 0.32, a: 0.04, da: 0.00012, warm: true  },
+    ];
+
+    var frame = 0;
+
+    function draw() {
+      var W = canvas.width, H = canvas.height;
+      frame++;
+
+      // Clear with deep black
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#080808';
+      ctx.fillRect(0, 0, W, H);
+
+      // Orb glows
+      orbs.forEach(function(o) {
+        o.a += o.da * Math.sin(frame * 0.008);
+        var cx = o.x * W, cy = o.y * H, rr = o.r * Math.max(W, H);
+        var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr);
+        var col = o.warm ? '255,61,0' : '180,40,0';
+        grad.addColorStop(0,   'rgba(' + col + ',' + Math.max(0, o.a) + ')');
+        grad.addColorStop(0.5, 'rgba(' + col + ',' + Math.max(0, o.a * 0.3) + ')');
+        grad.addColorStop(1,   'rgba(' + col + ',0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Light streaks
+      streaks.forEach(function(s, i) {
+        if (s.phase === 'in') {
+          s.alpha += s.speed;
+          if (s.alpha >= s.maxAlpha) s.phase = 'hold', s.holdTimer = 60 + Math.random() * 80;
+        } else if (s.phase === 'hold') {
+          s.holdTimer--;
+          if (s.holdTimer <= 0) s.phase = 'out';
+        } else {
+          s.alpha -= s.speed * 0.7;
+          if (s.alpha <= 0) { streaks[i] = makeStreak(); return; }
+        }
+        var ex = s.x + Math.cos(s.angle) * s.len;
+        var ey = s.y + Math.sin(s.angle) * s.len;
+        var g = ctx.createLinearGradient(s.x, s.y, ex, ey);
+        var col = s.warm ? '255,80,0' : '220,60,0';
+        g.addColorStop(0,   'rgba(' + col + ',0)');
+        g.addColorStop(0.3, 'rgba(' + col + ',' + s.alpha + ')');
+        g.addColorStop(0.7, 'rgba(' + col + ',' + s.alpha * 0.6 + ')');
+        g.addColorStop(1,   'rgba(' + col + ',0)');
+        ctx.strokeStyle = g;
+        ctx.lineWidth = s.width;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      });
+
+      // Particles
+      particles.forEach(function(p) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.pulse += p.pulseSpeed;
+        if (p.x < -5) p.x = W + 5;
+        if (p.x > W + 5) p.x = -5;
+        if (p.y < -5) p.y = H + 5;
+        if (p.y > H + 5) p.y = -5;
+        var a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.warm
+          ? 'rgba(255,90,20,' + a + ')'
+          : 'rgba(220,200,180,' + a + ')';
+        ctx.fill();
+      });
+
+      // Vignette
+      var vig = ctx.createRadialGradient(W/2, H/2, H*0.25, W/2, H/2, H*0.85);
+      vig.addColorStop(0, 'rgba(0,0,0,0)');
+      vig.addColorStop(1, 'rgba(0,0,0,0.72)');
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, W, H);
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  function enterSite() {
+    var btn = document.getElementById('explore-btn');
+    btn.style.transform = 'scale(0.96)';
+    btn.style.opacity = '0.7';
+
+    setTimeout(function() {
+      var landing = document.getElementById('landing-page');
+      var main = document.getElementById('main-site');
+      landing.classList.add('hidden');
+      main.classList.add('visible');
+      // re-enable scroll snap on main site
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }, 200);
+  }
+
+  // Prevent scroll while on landing page
+  (function() {
+    function blockScroll(e) {
+      var landing = document.getElementById('landing-page');
+      if (landing && !landing.classList.contains('hidden')) {
+        e.preventDefault();
+      }
+    }
+    window.addEventListener('wheel', blockScroll, { passive: false });
+    window.addEventListener('touchmove', blockScroll, { passive: false });
+  })();
+
+  var _csLink = document.getElementById('nav-case-studies');
+  if (_csLink) { _csLink.addEventListener('click', function(e) { e.preventDefault(); openCaseStudies(); }); }
 </script>
+<div id="cs-overlay">
+  <div class="cs-header"><div class="cs-header-logo"><img src="logo.png" alt="Laughing Lions" id="cs-logo-img"/></div><button class="cs-close" onclick="closeCaseStudies()" aria-label="Close">✕</button></div>
+  <div id="cs-index-view">
+    <div class="cs-hero">
+      <div class="cs-bg-text">WORK</div>
+      <div class="cs-hero-label">Case Studies</div>
+      <h2 class="cs-hero-title">Real Brands.<br><span>Real Results.</span></h2>
+      <p class="cs-hero-sub">Not just campaigns — strategic interventions that changed how brands performed, were perceived, and grew.</p>
+    </div>
+    <div class="cs-index">
+      <div class="cs-index-card" onclick="showCase(0)"><div class="cs-card-bg" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80')"></div><div class="cs-card-overlay"></div><div class="cs-card-content"><div class="cs-card-tag-row"><span class="cs-card-tag">Digital Marketing</span><span class="cs-card-tag">Performance</span><span class="cs-card-tag">F&amp;B</span></div><div class="cs-card-num">— Case Study 01</div><div class="cs-card-brand">MIRCH<br>MASALA</div><div class="cs-card-desc">Turning a legacy brand's new Surat outlet from slow-performing to a growing market player in 3 months.</div><div class="cs-card-cta">Read Case Study →</div></div></div>
+      <div class="cs-index-card" onclick="showCase(1)"><div class="cs-card-bg" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80')"></div><div class="cs-card-overlay"></div><div class="cs-card-content"><div class="cs-card-tag-row"><span class="cs-card-tag">Branding</span><span class="cs-card-tag">Content Strategy</span><span class="cs-card-tag">F&amp;B</span></div><div class="cs-card-num">— Case Study 02</div><div class="cs-card-brand">KISNA<br>CANTEEN</div><div class="cs-card-desc">Rebuilding a restaurant's digital identity and positioning it for multi-location expansion — in under a month.</div><div class="cs-card-cta">Read Case Study →</div></div></div>
+      <div class="cs-index-card" onclick="showCase(2)"><div class="cs-card-bg" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80')"></div><div class="cs-card-overlay"></div><div class="cs-card-content"><div class="cs-card-tag-row"><span class="cs-card-tag">Office Branding</span><span class="cs-card-tag">Signage &amp; Wayfinding</span><span class="cs-card-tag">Identity</span></div><div class="cs-card-num">— Case Study 03</div><div class="cs-card-brand">CREDENCE<br>WEALTH</div><div class="cs-card-desc">Transforming a 30-year legacy brand's new office into a fully branded spatial experience.</div><div class="cs-card-cta">Read Case Study →</div></div></div>
+    </div>
+  </div>
+  <div class="cs-full" id="cs-0">
+    <button class="cs-back" onclick="backToIndex()">← Back to Case Studies</button>
+    <div class="cs-full-eyebrow">Case Study 01 — F&amp;B · Digital Marketing</div>
+    <h2 class="cs-full-title">Mirch<br>Masala</h2><span class="cs-full-subtitle">Turning Legacy Into Local Demand</span>
+    <div class="cs-full-meta-row"><div class="cs-meta-cell"><div class="cs-meta-cell-label">Industry</div><div class="cs-meta-cell-val">F&amp;B / Restaurants</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Services</div><div class="cs-meta-cell-val">Digital · Performance</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Timeline</div><div class="cs-meta-cell-val">3 Months</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Location</div><div class="cs-meta-cell-val">Surat, India</div></div></div>
+    <div class="cs-hero-cover" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80')"></div>
+    <p class="cs-body-text">With a 30-year legacy and strong pan-India presence, Mirch Masala launched its new Surat outlet in August. Despite the brand's credibility and established identity, the outlet struggled to generate the expected response during its initial months of operation.</p>
+    <p class="cs-body-text">The challenge wasn't the product. It was the market positioning. Located on the first floor of a commercial complex — a factor that naturally impacts walk-ins — the outlet required a completely different consumer acquisition strategy tailored for Surat's audience behavior.</p>
+    <div class="cs-divider"></div><div class="cs-section-label">The Challenge</div>
+    <div class="cs-challenge-grid"><div class="cs-challenge-item">Low organic footfall for nearly 3 months post-launch</div><div class="cs-challenge-item">Limited local market awareness despite strong brand recall elsewhere</div><div class="cs-challenge-item">Location disadvantages — first floor of commercial complex</div><div class="cs-challenge-item">Disconnect between brand perception and Surat's dining audience</div></div>
+    <div class="cs-divider"></div><div class="cs-section-label">Our Strategy</div>
+    <p class="cs-body-text">Instead of directly pushing sales-focused campaigns, we approached the market in two phases.</p>
+    <div class="cs-phase"><span class="cs-phase-tag">Phase 01</span><div class="cs-phase-title">Awareness &amp; Market Conditioning</div><ul class="cs-bullets"><li>Strategic content positioning and brand recall campaigns</li><li>Hyperlocal audience targeting specific to Surat</li><li>Digital visibility enhancement across platforms</li><li>Consumer behavior mapping for the local dining audience</li></ul></div>
+    <div class="cs-phase"><span class="cs-phase-tag">Phase 02</span><div class="cs-phase-title">Performance Marketing &amp; Footfall Optimization</div><ul class="cs-bullets"><li>Optimized ad sets with geo-targeted promotions</li><li>Audience segmentation based on dining behavior</li><li>Retargeting strategies to convert aware audiences</li><li>Creative communication tailored to Surat's preferences</li></ul></div>
+    <div class="cs-divider"></div><div class="cs-section-label">The Results</div>
+    <div class="cs-results-grid"><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">Brand awareness in Surat increased significantly within 3 months</div></div><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">Footfall consistency strengthened despite the first-floor location challenge</div></div><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">Substantial increase in average sales and customer engagement</div></div></div>
+    <div class="cs-why-box"><p class="cs-why-text">In F&amp;B, legacy alone doesn't guarantee performance in a new market. Understanding consumer psychology, regional audience behavior, positioning, and performance marketing is what truly drives growth.</p><span class="cs-why-closer">We don't just market restaurants. We engineer demand for them.</span></div>
+    <div class="cs-nav-row"><div></div><button class="cs-nav-btn right" onclick="showCase(1)"><span class="cs-nav-dir">Next Case Study →</span><span class="cs-nav-name">Kisna Canteen</span></button></div>
+  </div>
+  <div class="cs-full" id="cs-1">
+    <button class="cs-back" onclick="backToIndex()">← Back to Case Studies</button>
+    <div class="cs-full-eyebrow">Case Study 02 — F&amp;B · Branding · Content Strategy</div>
+    <h2 class="cs-full-title">Kisna<br>Canteen</h2><span class="cs-full-subtitle">Rebuilding a Brand's Digital Appetite</span>
+    <div class="cs-full-meta-row"><div class="cs-meta-cell"><div class="cs-meta-cell-label">Industry</div><div class="cs-meta-cell-val">F&amp;B / Restaurants</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Services</div><div class="cs-meta-cell-val">Branding · Content</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Timeline</div><div class="cs-meta-cell-val">1 Month</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Outcome</div><div class="cs-meta-cell-val">Multi-location Ready</div></div></div>
+    <div class="cs-hero-cover" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80')"></div>
+    <p class="cs-body-text">In the F&amp;B industry, perception sells before the food does. When Kisna Canteen partnered with Laughing Lions, the brand was facing a critical issue — weak digital presentation. Despite having a strong product and growing customer potential, the brand's online presence lacked the visual identity and communication quality required to compete in a rapidly evolving food market.</p>
+    <p class="cs-body-text">Low-quality food photography, inconsistent content, and weak brand positioning were directly impacting engagement, audience perception, and ultimately, sales.</p>
+    <div class="cs-divider"></div><div class="cs-section-label">The Challenge</div>
+    <div class="cs-challenge-grid"><div class="cs-challenge-item">Weak digital presentation — inconsistent content and poor food photography</div><div class="cs-challenge-item">Brand positioning not aligned with competitive F&amp;B market expectations</div><div class="cs-challenge-item">New branch launch due within one month of takeover</div><div class="cs-challenge-item">No scalable visual identity to support multi-location growth</div></div>
+    <div class="cs-divider"></div><div class="cs-section-label">Our Approach</div>
+    <div class="cs-phase"><span class="cs-phase-tag">01 — Visual</span><div class="cs-phase-title">Visual Identity Upgrade</div><ul class="cs-bullets"><li>Complete overhaul of food shoot quality and creative direction</li><li>Elevated reels and short-form content production</li><li>Premium brand presentation across all platforms</li><li>Appetite-driven visual language built for recall</li></ul></div>
+    <div class="cs-phase"><span class="cs-phase-tag">02 — Strategy</span><div class="cs-phase-title">Strategic Content Positioning</div><ul class="cs-bullets"><li>Content strategy aligned with brand tone and audience behavior</li><li>Product highlights structured around market perception goals</li><li>Every post contributing toward stronger brand recall and trust</li></ul></div>
+    <div class="cs-phase"><span class="cs-phase-tag">03 — Expansion</span><div class="cs-phase-title">Expansion-Focused Branding</div><ul class="cs-bullets"><li>Visual consistency designed for multi-location scalability</li><li>Communication style supporting new branch launch positioning</li><li>Long-term brand identity built for F&amp;B market growth</li></ul></div>
+    <div class="cs-divider"></div><div class="cs-section-label">The Results</div>
+    <div class="cs-results-grid"><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">Content quality transformed significantly within the first month</div></div><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">New branch launch received stronger digital support and positioning</div></div><div class="cs-result-item"><div class="cs-result-icon">↑</div><div class="cs-result-text">Brand established a more premium, scalable, expansion-ready identity</div></div></div>
+    <div class="cs-why-box"><p class="cs-why-text">Most restaurant brands focus only on posting content. We focus on building positioning. Visuals create perception, perception builds trust, and trust drives sales.</p><span class="cs-why-closer">We didn't just improve their content. We prepared them for expansion.</span></div>
+    <div class="cs-nav-row"><button class="cs-nav-btn" onclick="showCase(0)"><span class="cs-nav-dir">← Previous</span><span class="cs-nav-name">Mirch Masala</span></button><button class="cs-nav-btn right" onclick="showCase(2)"><span class="cs-nav-dir">Next Case Study →</span><span class="cs-nav-name">Credence Wealth</span></button></div>
+  </div>
+  <div class="cs-full" id="cs-2">
+    <button class="cs-back" onclick="backToIndex()">← Back to Case Studies</button>
+    <div class="cs-full-eyebrow">Case Study 03 — Office Branding · Signage &amp; Wayfinding</div>
+    <h2 class="cs-full-title">Credence<br>Wealth</h2><span class="cs-full-subtitle">Designing a Legacy Brand For Its Next Chapter</span>
+    <div class="cs-full-meta-row"><div class="cs-meta-cell"><div class="cs-meta-cell-label">Industry</div><div class="cs-meta-cell-val">Finance / Wealth</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Services</div><div class="cs-meta-cell-val">Office · Signage</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Legacy</div><div class="cs-meta-cell-val">30+ Years</div></div><div class="cs-meta-cell"><div class="cs-meta-cell-label">Scope</div><div class="cs-meta-cell-val">Full Interior Brand</div></div></div>
+    <div class="cs-hero-cover" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80')"></div>
+    <p class="cs-body-text">After building a trusted reputation over 30+ years, Credence Wealth was entering a new phase of growth with the launch of its new office space. While the brand carried decades of credibility, the new workspace required an identity system that reflected its evolution, professionalism, and modern positioning.</p>
+    <p class="cs-body-text">This wasn't just about aesthetics. It was about translating a legacy into a physical experience.</p>
+    <div class="cs-divider"></div><div class="cs-section-label">The Challenge</div>
+    <div class="cs-challenge-grid"><div class="cs-challenge-item">New office space needed a refreshed, modern brand identity system</div><div class="cs-challenge-item">Visual communication had to balance legacy with modern professionalism</div><div class="cs-challenge-item">Interior branding required spatial storytelling, not just signage</div><div class="cs-challenge-item">Every corner had to communicate trust, scale, and credibility</div></div>
+    <div class="cs-divider"></div><div class="cs-section-label">Our Approach</div>
+    <div class="cs-phase"><span class="cs-phase-tag">01 — Identity</span><div class="cs-phase-title">Brand Identity Alignment</div><ul class="cs-bullets"><li>Reimagined visual language suited for the next-generation workspace</li><li>Preserved trust and legacy while introducing modern sophistication</li><li>Every design decision balanced corporate professionalism with brand consistency</li></ul></div>
+    <div class="cs-phase"><span class="cs-phase-tag">02 — Space</span><div class="cs-phase-title">Interior Office Branding</div><ul class="cs-bullets"><li>Wall branding, directional graphics, and environmental design elements</li><li>Spatial communication systems creating an immersive brand experience</li><li>Premium visual installations making the office feel intentional throughout</li></ul></div>
+    <div class="cs-phase"><span class="cs-phase-tag">03 — Navigation</span><div class="cs-phase-title">Signage &amp; Wayfinding Design</div><ul class="cs-bullets"><li>Navigation clarity and spatial hierarchy throughout the workspace</li><li>Visitor experience and brand visibility at every touchpoint</li><li>Cohesive, premium, purpose-driven signage system end-to-end</li></ul></div>
+    <div class="cs-divider"></div><div class="cs-section-label">The Results</div>
+    <div class="cs-results-grid"><div class="cs-result-item"><div class="cs-result-icon">✦</div><div class="cs-result-text">Office transformed from a workspace into a fully branded experience</div></div><div class="cs-result-item"><div class="cs-result-icon">✦</div><div class="cs-result-text">Modern identity successfully preserved and elevated the 30-year brand legacy</div></div><div class="cs-result-item"><div class="cs-result-icon">✦</div><div class="cs-result-text">Stronger spatial communication and visual consistency across every touchpoint</div></div></div>
+    <div class="cs-why-box"><p class="cs-why-text">Strong brands are not built only through digital presence — they are experienced through spaces. We specialize in creating signage and wayfinding systems that combine branding, functionality, and spatial storytelling.</p><span class="cs-why-closer">We didn't design an office. We designed an environment that communicates trust.</span></div>
+    <div class="cs-nav-row"><button class="cs-nav-btn" onclick="showCase(1)"><span class="cs-nav-dir">← Previous</span><span class="cs-nav-name">Kisna Canteen</span></button><div></div></div>
+  </div>
+</div>
+</div><!-- /#main-site -->
 </body>
 </html>
